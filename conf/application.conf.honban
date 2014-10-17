@@ -37,7 +37,6 @@ application.langs="en"
 # By convention, the default datasource is named `default`
 #
  db.default.driver=org.postgresql.Driver
-# db.default.url="jdbc:postgresql://localhost:5432/d1o5joi560f2af"
  db.default.url=${?DATABASE_URL}
  db.default.user=${?DATABASE_USER}
  db.default.password=${?DATABASE_PASSWORD}
