@@ -15,15 +15,9 @@ public class Application extends Controller {
     public static Result index() {
         //フォームオブジェクト生成
     	Form<Book> f = new Form(Book.class);
-        //本一覧を取得
-        List<Book> books = Book.find.all();
-        Collections.sort(books,new Comparator<Book>(){
-        	public int compare(Book b1, Book b2){
-        		return b1.id.compareTo(b2.id);
-        	}
-        });
-        
-        return ok(index.render("Your new application is ready.", f, books));
+        //本一覧を取得 (条件: 削除フラグ = 0, idで降順（新規が上にくる)
+        List<Book> books = Book.find.where().eq("deleteStatus", "0").orderBy("id desc").findList();
+        return ok(index.render("ここに部屋の名前がくる?", f, books));
     }
 
     public static Result initview() {
@@ -53,7 +47,8 @@ public class Application extends Controller {
     public static Result logicalDelete(Long id) {
         Book book = Book.find.byId(id);
         if (book != null) {
-        	book.deleteStatus= book.deleteStatus.equals("0")?"1":"0";
+            //deleteStatusを1に更新する。
+            book.deleteStatus = "1";
             book.update();
             return redirect("/");
         } else {
@@ -75,7 +70,7 @@ public class Application extends Controller {
             Form<Book> f = new Form(Book.class);
             return ok(index.render("削除対象が見つかりませんでした", f, books));
         }
-      }
+    }
     public static Result borrowBook(Long id) {
         Book book = Book.find.byId(id);
         if (book != null) {
