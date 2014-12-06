@@ -17,6 +17,12 @@ public class Application extends Controller {
     	Form<Book> f = new Form(Book.class);
         //本一覧を取得
         List<Book> books = Book.find.all();
+        Collections.sort(books,new Comparator<Book>(){
+        	public int compare(Book b1, Book b2){
+        		return b1.id.compareTo(b2.id);
+        	}
+        });
+        
         return ok(index.render("Your new application is ready.", f, books));
     }
 
