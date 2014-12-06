@@ -15,3 +15,4 @@ dist
 /.settings
 conf/application.conf.honban
 conf/application.conf.local
+conf/application.conf
