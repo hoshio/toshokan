@@ -6,6 +6,10 @@
 GET     /                           controllers.Application.index()
 GET		/libraly					controllers.Application.initview()
 POST	/libraly					controllers.Application.register()
+POST	/logicalDelete/:id			controllers.Application.logicalDelete(id : Long)
+POST    /index/:id					controllers.Application.delete(id : Long)
+POST    /borrowBook/:id					controllers.Application.borrowBook(id : Long)
+POST    /returnBook/:id					controllers.Application.returnBook(id : Long)
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.at(path="/public", file)

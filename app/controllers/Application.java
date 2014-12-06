@@ -34,7 +34,6 @@ public class Application extends Controller {
     	if (!f.hasErrors()) {
             //フォームにエラーがない場合、Messageインスタンスを取得
     		Book data = f.get();
-    		data.delete_flg = "0";
     		data.borrower = null;
             //Messageインスタンスを保存
     		data.save();
@@ -45,5 +44,59 @@ public class Application extends Controller {
     		return badRequest(index.render("ERROR", f, books));
     	}
     }
+    public static Result logicalDelete(Long id) {
+        Book book = Book.find.byId(id);
+        if (book != null) {
+        	book.deleteStatus= book.deleteStatus.equals("0")?"1":"0";
+            book.update();
+            return redirect("/");
+        } else {
+            //フォームオブジェクト生成
+        	Form<Book> f = new Form(Book.class);
+            //本一覧を取得
+            List<Book> books = Book.find.all();
+            return ok(index.render("ERROR:そのID番号は見つかりません",f,books));
+        }
+       
+    }
+    public static Result delete(Long id) {
+        Book obj = Book.find.byId(id);
+        if (obj != null) {
+            obj.delete();
+            return redirect("/");
+        } else {
+            List<Book> books = Book.find.all();
+            Form<Book> f = new Form(Book.class);
+            return ok(index.render("削除対象が見つかりませんでした", f, books));
+        }
+      }
+    public static Result borrowBook(Long id) {
+        Book book = Book.find.byId(id);
+        if (book != null) {
+        	book.bookStatus= book.bookStatus.equals("0")?"1":"0";
+            book.update();
+            return redirect("/");
+        } else {
+            //フォームオブジェクト生成
+        	Form<Book> f = new Form(Book.class);
+            //本一覧を取得
+            List<Book> books = Book.find.all();
+            return ok(index.render("ERROR:そのID番号は見つかりません",f,books));
+        }
+      }
+    public static Result returnBook(Long id) {
+        Book book = Book.find.byId(id);
+        if (book != null) {
+        	book.bookStatus= book.bookStatus.equals("0")?"1":"0";
+            book.update();
+            return redirect("/");
+        } else {
+            //フォームオブジェクト生成
+        	Form<Book> f = new Form(Book.class);
+            //本一覧を取得
+            List<Book> books = Book.find.all();
+            return ok(index.render("ERROR:そのID番号は見つかりません",f,books));
+        }
+      }
 
 }

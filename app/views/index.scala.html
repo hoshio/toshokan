@@ -87,12 +87,32 @@
 	<tr>
 		<th>本の名前</th>
 		<th>持ち主</th>
+		<th>削除フラグ</th>
+		<th>論理削除</th>
+		<th>物理削除フラグ</th>
 	</tr>
 	@for(book <- books) {
-	<tr>
-		<td>@book.book_name</td>
-		<td>@book.owner_name</td>
-	</tr>
+		<tr>
+			<td>@book.book_name</td>
+			<td>@book.owner_name</td>
+			<td>@book.deleteStatus</td>
+			<td>
+			@helper.form(action = routes.Application.logicalDelete(book.id)) {
+				<input type="submit" value="logicalDelete" class="btn btn-primary">
+			}
+			</td>
+			<td>
+			@if(book.bookStatus.equals("0")){
+				@helper.form(action = routes.Application.borrowBook(book.id)) {
+					<input type="submit" value="borrow" class="btn btn-primary">
+				}
+			}else{
+				@helper.form(action = routes.Application.returnBook(book.id)) {
+					<input type="submit" value="return" class="btn btn-primary">
+				}
+			}
+			</td>>
+		</tr>
 	}
 	
 		<script type="text/javascript">

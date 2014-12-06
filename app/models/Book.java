@@ -23,10 +23,13 @@ public class Book extends Model {
     @Required
     public String owner_name;
 
-    public String delete_flg;
-
     public String borrower;
 
+	//0:貸出可, 1:貸出不可
+	public String bookStatus="0";
+
+	//0:通常, 1:削除済み
+	public String deleteStatus="0";
     public static Finder<Long, Book> find =
        new Finder<Long, Book>(Long.class, Book.class);
 
