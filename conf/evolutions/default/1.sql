@@ -3,6 +3,13 @@
 
 # --- !Ups
 
+create table admins (
+  id                        bigint not null,
+  username                  varchar(255),
+  password                  varchar(255),
+  constraint pk_admins primary key (id))
+;
+
 create table book (
   id                        bigint not null,
   book_name                 varchar(255),
@@ -19,6 +26,8 @@ create table room (
   constraint pk_room primary key (id))
 ;
 
+create sequence admins_seq;
+
 create sequence book_seq;
 
 create sequence room_seq;
@@ -28,9 +37,13 @@ create sequence room_seq;
 
 # --- !Downs
 
+drop table if exists admins cascade;
+
 drop table if exists book cascade;
 
 drop table if exists room cascade;
+
+drop sequence if exists admins_seq;
 
 drop sequence if exists book_seq;
 

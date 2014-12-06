@@ -100,5 +100,31 @@ public class Application extends Controller {
             return ok(index.render("ERROR:そのID番号は見つかりません",f,books));
         }
       }
+    public static Result login(){
+    	return ok(login.render(form(Login.class)));
+    }
+    public static Result authenticate(){
+    	Form<Login> loginForm = form(Login.class).bindFromRequest();
+    	if(loginForm.hasErrors()){
+    		return badRequest(views.html.login.render(loginForm));
+    	}else{
+    		session("username", loginForm.get().getUsername());
+    		String returnUrl = ctx().session().get("returnUrl");
+    		if(returnUrl == null || returnUrl.equals("")||
+    				returnUrl.equals(routes.Application.login().absoluteURL(request()))){
+    			returnUrl = routes.Application.index_2().url();
+    		}
+    		return redirect(returnUrl);
+    	}
+    }
+    @play.mvc.Security.Authenticated(models.Secured.class)
+    public static Result logout(){
+    	session().clear();
+    	return redirect(routes.Application.login());    	
+    }
+    @play.mvc.Security.Authenticated(models.Secured.class)
+    public static Result index_2(){
+    	return index();
+    }
 
 }

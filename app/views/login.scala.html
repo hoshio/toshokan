@@ -1,0 +1,28 @@
+@(form: play.data.Form[models.Login])
+
+<html>
+	<head>
+	<title>Login</title>
+		<style type="text/css">
+		body{background-color: #ccc; padding: 20px;}
+		h1{color: #fff;}
+		input,button{padding: 4px 8px; height:3em;}
+		.error{color:#933;}
+		.login{
+		border:1px solid #aaa; padding: 10px 14px; margin-top: 10px;background-color: #fff; width: 300px;}
+		</style>
+	</head>
+	<body>
+	<header><h1>Login</h1></header>
+	@helper.form(action = routes.Application.authenticate()){
+	@if(form.hasGlobalErrors){
+		<p class="error">@form.globalError.message</p>
+	}
+	<div class ="login">
+	<p><input type="text" name="username" placeholder="Username" value="@form("username").value"></p>
+	<p><input type="password" name="password" placeholder="Password"></p>
+	<p><button type="submit">Login</button></p>
+	</div>
+	}
+	</body>
+</html>

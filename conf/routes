@@ -3,7 +3,11 @@
 # ~~~~
 
 # Home page
-GET     /                           controllers.Application.index()
+GET     /                           controllers.Application.index_2()
+GET     /login                      controllers.Application.login()
+POST    /authenticate               controllers.Application.authenticate()
+GET     /logout                     controllers.Application.logout()
+GET     /index                      controllers.Application.index()
 GET		/libraly					controllers.Application.initview()
 POST	/libraly					controllers.Application.register()
 POST	/logicalDelete/:id			controllers.Application.logicalDelete(id : Long)
