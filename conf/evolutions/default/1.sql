@@ -3,22 +3,23 @@
 
 # --- !Ups
 
-create table library (
+create table book (
   id                        bigint not null,
-  name                      varchar(255),
-  create_date               timestamp not null,
-  update_date               timestamp not null,
-  constraint pk_library primary key (id))
+  book_name                 varchar(255),
+  owner_name                varchar(255),
+  delete_flg                varchar(255),
+  borrower                  varchar(255),
+  constraint pk_book primary key (id))
 ;
 
-create sequence library_seq;
+create sequence book_seq;
 
 
 
 
 # --- !Downs
 
-drop table if exists library cascade;
+drop table if exists book cascade;
 
-drop sequence if exists library_seq;
+drop sequence if exists book_seq;
 
