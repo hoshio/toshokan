@@ -28,13 +28,8 @@
 		</h3>
 	</div>
 	<center>
-	<div class="container">
-	<label>あなたの持っている本を登録しましょう</label>
-<!-- 		<form class="form-inline regist" role="form">
-			<label>あなたの持っている本を登録しましょう</label>
-			<input type="text" class="form-control" placeholder="ISBNコード">
-			<input type="text" class="form-control" placeholder="あなたの名前">
-		</form> -->
+
+ 	<label>あなたの持っている本を登録しましょう</label>
 		@helper.form(action = routes.Application.register) {
 			@(helper.inputText (
 				field = form1("book_name")
@@ -46,6 +41,7 @@
 		}
 	</div>		
 	</center>
+
 
 <!-- 	<br>
 	<div class="container">
@@ -104,11 +100,11 @@
 			<td>
 			@if(book.bookStatus.equals("0")){
 				@helper.form(action = routes.Application.borrowBook(book.id)) {
-					<input type="submit" value="borrow" class="btn btn-primary">
+					<input type="submit" value="借りる" class="btn btn-primary">
 				}
 			}else{
 				@helper.form(action = routes.Application.returnBook(book.id)) {
-					<input type="submit" value="return" class="btn btn-primary">
+					<input type="submit" value="返す" class="btn btn-primary">
 				}
 			}
 			</td>
@@ -141,6 +137,5 @@
 	});
 	-->
 	</script>
-	
     </body>
 </html>

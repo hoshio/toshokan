@@ -13,7 +13,15 @@ create table book (
   constraint pk_book primary key (id))
 ;
 
+create table room (
+  id                        bigint not null,
+  room_name                 varchar(255),
+  constraint pk_room primary key (id))
+;
+
 create sequence book_seq;
+
+create sequence room_seq;
 
 
 
@@ -22,5 +30,9 @@ create sequence book_seq;
 
 drop table if exists book cascade;
 
+drop table if exists room cascade;
+
 drop sequence if exists book_seq;
+
+drop sequence if exists room_seq;
 
