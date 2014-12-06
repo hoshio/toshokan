@@ -1,4 +1,4 @@
-@(message: String, form1 : Form[Book], books : List[Book])
+@(username: String, form1 : Form[Book], books : List[Book])
 
 <!DOCTYPE html>
 
@@ -24,11 +24,12 @@
     <body>
 	<div class="container">
 		<h3 class="page-header text-primary">図書館アプリ
-		<small style="margin-left:10px">本の貸し借りを支援するサービスです
-		@helper.form(action = routes.Authentication.logout()){
-		<button type="submit">Logout</button>
-		}</small>
+		<small style="margin-left:10px">本の貸し借りを支援するサービスです</small>
 		</h3>
+		user:@username
+		@helper.form(action = routes.Authentication.logout()){
+			<button type="submit">Logout</button>
+		}
 	</div>
 	<center>
 	<div class="container">
@@ -36,9 +37,6 @@
 		@helper.form(action = routes.Application.register) {
 			@(helper.inputText (
 				field = form1("book_name")
-			))
-			@(helper.inputText (
-				field = form1("owner_name")
 			))
 		<input type="submit" value="登録" class="btn btn-primary" id="register">
 		}

@@ -18,7 +18,7 @@ public class Application extends Controller {
         //本一覧を取得 (条件: 削除フラグ = 0, idで降順（新規が上にくる)
         List<Book> books = Book.find.where().eq("deleteStatus", "0").orderBy("id desc").findList();
         Logger.debug("通ったよ");
-        return ok(index.render("ここに部屋の名前がくる?", f, books));
+        return ok(index.render(session("username"), f, books));
     }
 
     public static Result initview() {
@@ -26,7 +26,7 @@ public class Application extends Controller {
         Form<Book> f = new Form(Book.class);
         //本一覧を取得
         List<Book> books = Book.find.all();
-        return ok(index.render("Your new application is ready.", f, books));
+        return ok(index.render(session("username"), f, books));
     }
 
     public static Result register() {
@@ -35,6 +35,7 @@ public class Application extends Controller {
     	if (!f.hasErrors()) {
             //フォームにエラーがない場合、Messageインスタンスを取得
     		Book data = f.get();
+    		data.owner_name = session("username");
     		data.borrower = null;
             //Messageインスタンスを保存
     		data.save();
@@ -93,7 +94,8 @@ public class Application extends Controller {
         Book book = Book.find.byId(id);
         if (book != null) {
         	book.bookStatus= book.bookStatus.equals("0")?"1":"0";
-            book.update();
+        	book.borrower = "";
+        	book.update();
             return redirect("/");
         } else {
             //フォームオブジェクト生成

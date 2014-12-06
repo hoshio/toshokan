@@ -43,13 +43,6 @@ public class Authentication extends Controller {
     	    //本一覧を取得
     	    List<Book> books = Book.find.all();
         
-/*    		String returnUrl = ctx().session().get("returnUrl");
-    		if(returnUrl == null || returnUrl.equals("") || returnUrl.equals(routes.Authentication.login().absoluteURL(request()))){
-    			returnUrl = routes.Authentication.index_2().url();
-    		}
-    		
-    		return redirect(returnUrl);
-*/
 			return ok(index.render(user,f,books));
     	}
     }

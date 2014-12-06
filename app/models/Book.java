@@ -15,7 +15,6 @@ public class Book extends Model {
 	@Required
 	public String book_name;
 
-	@Required
 	public String owner_name;
 
 	public String borrower;
