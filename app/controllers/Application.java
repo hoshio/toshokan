@@ -17,6 +17,7 @@ public class Application extends Controller {
     	Form<Book> f = new Form(Book.class);
         //本一覧を取得 (条件: 削除フラグ = 0, idで降順（新規が上にくる)
         List<Book> books = Book.find.where().eq("deleteStatus", "0").orderBy("id desc").findList();
+        Logger.debug("通ったよ");
         return ok(index.render("ここに部屋の名前がくる?", f, books));
     }
 
@@ -40,7 +41,7 @@ public class Application extends Controller {
             //Welcomeページにリダイレクト
     		return redirect("/");
     	} else {
-            List<Book> books = Book.find.all();
+            List<Book> books = Book.find.where().eq("deleteStatus", "0").orderBy("id desc").findList();
     		return badRequest(index.render("ERROR", f, books));
     	}
     }
@@ -101,6 +102,15 @@ public class Application extends Controller {
             List<Book> books = Book.find.all();
             return ok(index.render("ERROR:そのID番号は見つかりません",f,books));
         }
-      }
+    }
+    @play.mvc.Security.Authenticated(models.Secured.class)
+    public static Result logout(){
+    	session().clear();
+    	return redirect(routes.Authentication.login());    	
+    }
+    @play.mvc.Security.Authenticated(models.Secured.class)
+    public static Result index_2(){
+    	return index();
+    }
 
 }
