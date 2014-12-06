@@ -75,7 +75,10 @@ public class Application extends Controller {
         Book book = Book.find.byId(id);
         if (book != null) {
         	book.bookStatus= book.bookStatus.equals("0")?"1":"0";
-            book.update();
+			// sessionにセットした値を取得
+			String user = session("username");
+			book.borrower = user;
+			book.update();
             return redirect("/");
         } else {
             //フォームオブジェクト生成
