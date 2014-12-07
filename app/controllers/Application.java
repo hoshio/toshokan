@@ -12,12 +12,14 @@ import play.mvc.*;
 
 public class Application extends Controller {
 
+    /**
+    *
+    */
     public static Result index() {
         //フォームオブジェクト生成
     	Form<Book> f = new Form(Book.class);
         //本一覧を取得 (条件: 削除フラグ = 0, idで降順（新規が上にくる)
         List<Book> books = Book.find.where().eq("deleteStatus", "0").orderBy("id desc").findList();
-        Logger.debug("通ったよ");
         return ok(index.render(session("username"), f, books));
     }
 

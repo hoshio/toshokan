@@ -3,6 +3,7 @@
 <html>
 	<head>
 	<title>Login</title>
+        <link rel="stylesheet" media="screen" href="@routes.Assets.at("bootstrap/css/bootstrap.css")" >
 		<style type="text/css">
 		body{backgroud-color: #ccc: padding: 20px;}
 		h1{color: #fff;}
@@ -19,10 +20,12 @@
 	@if(form.hasGlobalErrors){
 		<p class="error">@form.globalError.message</p>
 	}
-	<div class ="login">
-	<p><input type="text" name="username" placeholder="Username" value="@form("username").value"></p>
-	<p><input type="password" name="password" placeholder="Password"></p>
-	<p><button type="submit">Login</button></p>
+	<div class="container">
+	<div class="col-xs-3">
+		<p><input type="text" name="username" class="form-control" placeholder="Username" value="@form("username").value"></p>
+		<p><input type="password" name="password" class="form-control" placeholder="Password"></p>
+		<p><input type="submit" value="Login" class="btn btn-primary"></p>
+		</div>
 	</div>
 	}
 	</body>

@@ -28,18 +28,21 @@
 		</h3>
 		user:@username
 		@helper.form(action = routes.Authentication.logout()){
-			<button type="submit">Logout</button>
+			<button type="submit" class="btn btn-primary">Logout</button>
 		}
 	</div>
 	<center>
 	<div class="container">
+		<div class="form-inline regist" role="form">
 	<label>あなたの持っている本を登録しましょう</label>
 		@helper.form(action = routes.Application.register) {
-			@(helper.inputText (
+<!-- 			@(helper.inputText (
 				field = form1("book_name")
-			))
+			)) -->
+		<input type="text" class="form-control" name="book_name" placeholder="本の名前">
 		<input type="submit" value="登録" class="btn btn-primary" id="register">
 		}
+		</div>
 	</div>		
 	</center>
 	<table class="table table-striped">
@@ -68,7 +71,7 @@
 			</td>
 			<td>
 			@helper.form(action = routes.Application.logicalDelete(book.id)) {
-				<input type="submit" value="削除" class="btn btn-primary">
+				<input type="submit" value="削除" class="btn btn-danger">
 			}
 			</td>
 		</tr>
