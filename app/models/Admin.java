@@ -13,6 +13,8 @@ public class Admin extends Model{
 	public Long id;
 	@Constraints.Required
 	public String username;
+	@Constraints.Email
+	public String email;
 	@Constraints.Required
 	public String password;
 
@@ -28,6 +30,12 @@ public class Admin extends Model{
 	public void setUsername(String username){
 		this.username = username;
 	}
+	public String getEmail(){
+		return this.email;
+	}
+	public void setEmail(String email){
+		this.email = email;
+	}
 	public String getPassword(){
 		return this.password;
 	}
@@ -35,4 +43,20 @@ public class Admin extends Model{
 		this.password = password;
 	}
 	
+	public static Finder<Long, Admin> find = new Finder<Long,Admin>(
+		Long.class, Admin.class
+	);
+	
+	public static void create(String username, String email, String password) {
+        Admin user = new Admin();
+        user.username = username;
+        user.email = email;
+        user.password = password;
+        user.save();
+    }
+	
+	public static Boolean authenticate(String name, String password) {
+		Admin user = find.where().eq("username", name).eq("password", password).findUnique();
+		return (user != null);
+	}
 }

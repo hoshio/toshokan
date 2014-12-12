@@ -1,8 +1,8 @@
-@(message: String, form: play.data.Form[models.Admin])
+@(form: play.data.Form[models.Admin])
 
 <html>
 	<head>
-	<title>Login</title>
+	<title>Registration</title>
         <link rel="stylesheet" media="screen" href="@routes.Assets.at("bootstrap/css/bootstrap.css")" >
 		<style type="text/css">
 		body{backgroud-color: #ccc: padding: 20px;}
@@ -15,24 +15,19 @@
 		</style>
 	</head>
 	<body>
-	<header><h1>Login</h1></header>
-	<h5>@message</h5>
-	@helper.form(action = routes.Authentication.authenticate()){
+	<header><h1>Registration</h1></header>
+	@helper.form(action = routes.Registration.register()){
 	@if(form.hasGlobalErrors){
 		<p class="error">@form.globalError.message</p>
 	}
 	<div class="container">
 	<div class="col-xs-3">
 		<p><input type="text" name="username" class="form-control" placeholder="Username" value="@form("username").value"></p>
-		<p><input type="password" name="password" class="form-control" placeholder="Password"></p>
-		<p><input type="submit" value="Login" class="btn btn-primary"></p>
+		<p><input type="text" name="email" class="form-control" placeholder="Email" value="@form("email").value"></p>
+		<p><input type="password" name="password" class="form-control" placeholder="Password" value="@form("password").value"></p>
+		<p><input type="submit" value="Registration" class="btn btn-primary"></p>
 		</div>
 	</div>
 	}
-	
-	@helper.form(action = (routes.Registration.regPage())) {
-		<input type="submit" value="Registration Page" class="btn btn-danger">
-	}
-	
 	</body>
 </html>

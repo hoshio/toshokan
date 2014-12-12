@@ -17,6 +17,7 @@ public class Application extends Controller {
     /**
     *
     */
+	@Security.Authenticated(Secured.class)
     public static Result index() {
         //フォームオブジェクト生成
     	Form<Book> f = new Form(Book.class);
@@ -80,12 +81,17 @@ public class Application extends Controller {
     public static Result borrowBook(Long id) {
         Book book = Book.find.byId(id);
         if (book != null) {
-        	book.bookStatus= book.bookStatus.equals("0")?"1":"0";
 			// sessionにセットした値を取得
 			String user = session("username");
+        	
+        	book.bookStatus= book.bookStatus.equals("0")?"1":"0";
 			book.borrower = user;
 			book.update();
-        	SendMail();
+
+			//メール送信
+			Admin owner = Admin.find.where().eq("username", book.owner_name).findUnique();
+			SendMail(owner.email, user, book.book_name);
+			
             return redirect("/");
         } else {
             //フォームオブジェクト生成
@@ -110,18 +116,14 @@ public class Application extends Controller {
             return ok(index.render("ERROR:そのID番号は見つかりません",f,books));
         }
     }
-    @play.mvc.Security.Authenticated(models.Secured.class)
+
     public static Result logout(){
     	session().clear();
     	return redirect(routes.Authentication.login());    	
     }
-    @play.mvc.Security.Authenticated(models.Secured.class)
-    public static Result index_2(){
-    	return index();
-    }
     
     // メール送信
-    public static void SendMail(){
+    public static void SendMail(String owner_email, String borrower, String book_name){
     	SimpleEmail mailer = new SimpleEmail();
     	try {
     	    mailer.setCharset("UTF-8");
@@ -130,9 +132,9 @@ public class Application extends Controller {
     	    mailer.setSSL(true);
     	    mailer.setAuthentication("toshokanapp@gmail.com", "toshoapp");
     	    mailer.setFrom("toshokanapp@gmail.com");
-    	    mailer.setMsg("本文");
+    	    mailer.setMsg(borrower + "があなたの" + book_name + "を貸してほしいそうです。");
     	    mailer.setSubject("テストメール");
-    	    mailer.addTo("toshokanapp@gmail.com");
+    	    mailer.addTo(owner_email);
     	    mailer.send();
     	} catch(EmailException e) {
     	    Logger.error(e.toString(), e);

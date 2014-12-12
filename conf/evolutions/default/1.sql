@@ -6,6 +6,7 @@
 create table admins (
   id                        bigint not null,
   username                  varchar(255),
+  email                     varchar(255),
   password                  varchar(255),
   constraint pk_admins primary key (id))
 ;

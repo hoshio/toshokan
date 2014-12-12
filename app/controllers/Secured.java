@@ -1,4 +1,4 @@
-package models;
+package controllers;
 
 import play.mvc.Http.Context;
 import play.mvc.Result;
