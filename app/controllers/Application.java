@@ -10,6 +10,8 @@ import play.data.*;
 import static play.data.Form.*;
 import play.mvc.*;
 
+import org.apache.commons.mail.*;
+
 public class Application extends Controller {
 
     /**
@@ -83,6 +85,7 @@ public class Application extends Controller {
 			String user = session("username");
 			book.borrower = user;
 			book.update();
+        	SendMail();
             return redirect("/");
         } else {
             //フォームオブジェクト生成
@@ -116,5 +119,23 @@ public class Application extends Controller {
     public static Result index_2(){
     	return index();
     }
-
+    
+    // メール送信
+    public static void SendMail(){
+    	SimpleEmail mailer = new SimpleEmail();
+    	try {
+    	    mailer.setCharset("UTF-8");
+    	    mailer.setHostName("smtp.gmail.com");
+    	    mailer.setSmtpPort(465);
+    	    mailer.setSSL(true);
+    	    mailer.setAuthentication("toshokanapp@gmail.com", "toshoapp");
+    	    mailer.setFrom("toshokanapp@gmail.com");
+    	    mailer.setMsg("本文");
+    	    mailer.setSubject("テストメール");
+    	    mailer.addTo("toshokanapp@gmail.com");
+    	    mailer.send();
+    	} catch(EmailException e) {
+    	    Logger.error(e.toString(), e);
+    	}
+    }
 }
