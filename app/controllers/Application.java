@@ -9,48 +9,61 @@ import play.*;
 import play.data.*;
 import static play.data.Form.*;
 import play.mvc.*;
-
-import org.apache.commons.mail.*;
+import play.cache.Cache;
 
 public class Application extends Controller {
 
-    /**
-    *
+    /*
+    * トップページ表示
     */
 	@Security.Authenticated(Secured.class)
     public static Result index() {
         //フォームオブジェクト生成
     	Form<Book> f = new Form(Book.class);
-        //本一覧を取得 (条件: 削除フラグ = 0, idで降順（新規が上にくる)
-        List<Book> books = Book.find.where().eq("deleteStatus", "0").orderBy("id desc").findList();
-        return ok(index.render(session("username"), f, books));
-    }
+	    //本一覧取得
+	    List<Book> books = CommonUtility.findBookList();        
+        return ok(index.render((String)Cache.get("login.key"), f, books));
+	}
 
+	/*
+	 * トップページ表示
+	 */
     public static Result initview() {
         //フォームオブジェクト生成
         Form<Book> f = new Form(Book.class);
-        //本一覧を取得
-        List<Book> books = Book.find.all();
-        return ok(index.render(session("username"), f, books));
+	    //本一覧取得
+	    List<Book> books = CommonUtility.findBookList();        
+        return ok(index.render((String)Cache.get("login.key"), f, books));
     }
 
+    /*
+     * 本登録機能
+     */
+	@Security.Authenticated(Secured.class)
     public static Result register() {
         //requestからフォームインスタンスを取得
     	Form<Book> f = new Form(Book.class).bindFromRequest();
     	if (!f.hasErrors()) {
             //フォームにエラーがない場合、Messageインスタンスを取得
     		Book data = f.get();
-    		data.owner_name = session("username");
+    		data.owner_name = (String)Cache.get("login.key");
     		data.borrower = null;
             //Messageインスタンスを保存
     		data.save();
             //Welcomeページにリダイレクト
     		return redirect("/");
     	} else {
-            List<Book> books = Book.find.where().eq("deleteStatus", "0").orderBy("id desc").findList();
+    	    //本一覧取得
+    	    List<Book> books = CommonUtility.findBookList();        
+
     		return badRequest(index.render("ERROR", f, books));
     	}
     }
+
+    /*
+     * 論理削除機能
+     */
+	@Security.Authenticated(Secured.class)
     public static Result logicalDelete(Long id) {
         Book book = Book.find.byId(id);
         if (book != null) {
@@ -61,46 +74,61 @@ public class Application extends Controller {
         } else {
             //フォームオブジェクト生成
         	Form<Book> f = new Form(Book.class);
-            //本一覧を取得
-            List<Book> books = Book.find.all();
+    	    //本一覧取得
+    	    List<Book> books = CommonUtility.findBookList();        
             return ok(index.render("ERROR:そのID番号は見つかりません",f,books));
         }
-       
     }
+    
+    /*
+     * 物理削除機能
+     */
     public static Result delete(Long id) {
         Book obj = Book.find.byId(id);
         if (obj != null) {
             obj.delete();
             return redirect("/");
         } else {
-            List<Book> books = Book.find.all();
             Form<Book> f = new Form(Book.class);
+    	    //本一覧取得
+    	    List<Book> books = CommonUtility.findBookList();        
+
             return ok(index.render("削除対象が見つかりませんでした", f, books));
         }
     }
+    
+    /*
+     * 本を借りるときの処理
+     */
+	@Security.Authenticated(Secured.class)
     public static Result borrowBook(Long id) {
         Book book = Book.find.byId(id);
         if (book != null) {
-			// sessionにセットした値を取得
-			String user = session("username");
-        	
+			//sessionからユーザー名を取得
+        	String username = (String)Cache.get("login.key");
+        	//Book情報の更新
         	book.bookStatus= book.bookStatus.equals("0")?"1":"0";
-			book.borrower = user;
+			book.borrower = username;
 			book.update();
 
 			//メール送信
 			Admin owner = Admin.find.where().eq("username", book.owner_name).findUnique();
-			SendMail(owner.email, user, book.book_name);
+			CommonUtility.SendMail(owner.email, username, book.book_name);
 			
             return redirect("/");
         } else {
             //フォームオブジェクト生成
         	Form<Book> f = new Form(Book.class);
-            //本一覧を取得
-            List<Book> books = Book.find.all();
+    	    //本一覧取得
+    	    List<Book> books = CommonUtility.findBookList();        
             return ok(index.render("ERROR:そのID番号は見つかりません",f,books));
         }
-      }
+    }
+    
+    /*
+     * 本を返すときの処理
+     */
+	@Security.Authenticated(Secured.class)
     public static Result returnBook(Long id) {
         Book book = Book.find.byId(id);
         if (book != null) {
@@ -111,33 +139,19 @@ public class Application extends Controller {
         } else {
             //フォームオブジェクト生成
         	Form<Book> f = new Form(Book.class);
-            //本一覧を取得
-            List<Book> books = Book.find.all();
+    	    //本一覧取得
+    	    List<Book> books = CommonUtility.findBookList();        
             return ok(index.render("ERROR:そのID番号は見つかりません",f,books));
         }
     }
 
+    /*
+     * ログアウト機能
+     */
     public static Result logout(){
-    	session().clear();
-    	return redirect(routes.Authentication.login());    	
-    }
-    
-    // メール送信
-    public static void SendMail(String owner_email, String borrower, String book_name){
-    	SimpleEmail mailer = new SimpleEmail();
-    	try {
-    	    mailer.setCharset("UTF-8");
-    	    mailer.setHostName("smtp.gmail.com");
-    	    mailer.setSmtpPort(465);
-    	    mailer.setSSL(true);
-    	    mailer.setAuthentication("toshokanapp@gmail.com", "toshoapp");
-    	    mailer.setFrom("toshokanapp@gmail.com");
-    	    mailer.setMsg(borrower + "があなたの" + book_name + "を貸してほしいそうです。");
-    	    mailer.setSubject("テストメール");
-    	    mailer.addTo(owner_email);
-    	    mailer.send();
-    	} catch(EmailException e) {
-    	    Logger.error(e.toString(), e);
-    	}
+    	//セッションクリア
+    	Cache.remove("login.key");
+
+    	return redirect(routes.Authentication.login());
     }
 }
