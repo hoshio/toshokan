@@ -15,10 +15,12 @@ import play.data.validation.Constraints.*;
 public class Room extends Model {
  
     @Id
-    public Long id;
+    public Long room_id;
     
     @Required
     public String room_name;
+
+    public Long create_user_id;
 
     public static Finder<Long, Room> find =
        new Finder<Long, Room>(Long.class, Room.class);
