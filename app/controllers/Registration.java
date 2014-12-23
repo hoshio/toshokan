@@ -17,35 +17,42 @@ public class Registration extends Controller {
      * ユーザー登録画面へ遷移
      */
     public static Result regPage(){
-    	return ok(reg.render(form(Admin.class)));
+    	return ok(reg.render(form(User.class)));
     }
     
     /*
      * 新規ユーザー登録
      */
     public static Result register() {
-    	Form<Admin> regForm = form(Admin.class).bindFromRequest();
-    	if(regForm.hasErrors()){
-    		return badRequest(views.html.reg.render(regForm));
-    	}else{
-    		String username = regForm.get().getUsername();
-    		String email = regForm.get().getEmail();
-    		String password = regForm.get().getPassword();
+    	Form<User> form = form(User.class).bindFromRequest();
+    	if(form.hasErrors()) {
+    		return badRequest(views.html.reg.render(form));
+    	} else {
+    		User user = form.get();
+    		String username = user.username;
+    		String email = user.email;
+    		String password = user.password;
     		
-    		Admin new_user = Admin.find.where().eq("username", username).eq("email", email).findUnique();
-    		if (new_user == null) {
+    		//ユーザー名のユニークチェックが必要。すごく雑に実装します
+    		if (User.find(username) != null) {
+    			//登録済みのユーザー
+    			return badRequest(reg.render(form));
+    		}
+    		
+    		User newUser = User.find(username, email);
+    		if (newUser == null) {
     			//新規者insert
-    			Admin.create(username, email, password);
+    			User.create(username, email, password);
         		//セッション作成
     			Secured.createSession(username);
     		} else {
-        		return badRequest(views.html.reg.render(regForm));
+        		return badRequest(views.html.reg.render(form));
     		}
     		
     		//フォームオブジェクト生成
     	    Form<Book> f = new Form(Book.class);
     	    //本一覧取得
-    	    List<Book> books = CommonUtility.findBookList();        
+    	    List<Book> books = Book.findAll();        
 			return ok(index.render((String)Cache.get("login.key"),f,books));
     	}
     }

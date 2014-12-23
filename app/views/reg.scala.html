@@ -1,33 +1,63 @@
-@(form: play.data.Form[models.Admin])
+@(form: play.data.Form[models.User])
 
 <html>
-	<head>
-	<title>Registration</title>
-        <link rel="stylesheet" media="screen" href="@routes.Assets.at("bootstrap/css/bootstrap.css")" >
-		<style type="text/css">
-		body{backgroud-color: #ccc: padding: 20px;}
-		h1{color: #fff;}
-		input,button{padding: 4px 8px; height:3em}
-		.error{color:#933}
-		.login{
-		border:1px solid #aaa; padding: 10px 14 px; margin-top: 10px;
-		background-color: #fff; width: 300px}
-		</style>
-	</head>
-	<body>
-	<header><h1>Registration</h1></header>
+<head>
+<title>Registration</title>
+<link rel="stylesheet" media="screen" href="@routes.Assets.at("bootstrap/css/bootstrap.css")" >
+<style type="text/css">
+body {
+	backgroud-color: #ccc: padding: 20px;
+}
+
+h1 {
+	color: #fff;
+}
+
+input, button {
+	padding: 4px 8px;
+	height: 3em
+}
+
+.error {
+	color: #933
+}
+
+.login {
+	border: 1px solid #aaa;
+	padding: 10px 14 px;
+	margin-top: 10px;
+	background-color: #fff;
+	width: 300px
+}
+</style>
+</head>
+<body>
+	<header>
+		<h1>Registration</h1>
+	</header>
 	@helper.form(action = routes.Registration.register()){
 	@if(form.hasGlobalErrors){
-		<p class="error">@form.globalError.message</p>
+	<p class="error">@form.globalError.message</p>
 	}
 	<div class="container">
-	<div class="col-xs-3">
-		<p><input type="text" name="username" class="form-control" placeholder="Username" value="@form("username").value"></p>
-		<p><input type="text" name="email" class="form-control" placeholder="Email" value="@form("email").value"></p>
-		<p><input type="password" name="password" class="form-control" placeholder="Password" value="@form("password").value"></p>
-		<p><input type="submit" value="Registration" class="btn btn-primary"></p>
+		<div class="col-xs-3">
+			<p>
+				<input type="text" name="username" class="form-control"
+					placeholder="Username" value="@form("username").value">
+			</p>
+			<p>
+				<input type="text" name="email" class="form-control"
+					placeholder="Email" value="@form("email").value">
+			</p>
+			<p>
+				<input type="password" name="password" class="form-control"
+					placeholder="Password" value="@form("password").value">
+			</p>
+			<p>
+				<input type="submit" value="Registration" class="btn btn-primary">
+			</p>
 		</div>
 	</div>
 	}
-	</body>
+</body>
 </html>

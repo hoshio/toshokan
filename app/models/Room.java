@@ -12,17 +12,25 @@ import play.data.validation.*;
 import play.data.validation.Constraints.*;
  
 @Entity
+@Table(name = "rooms")
 public class Room extends Model {
  
-    @Id
-    public Long room_id;
+	private static final long serialVersionUID = 1L;
+
+	@Id
+    public Long id;
     
     @Required
     public String room_name;
+    
+    @ManyToOne(cascade = CascadeType.ALL)
+    public User create_user;
+    
+    @OneToMany(cascade = CascadeType.ALL)
+    public List<Book> books;
 
-    public Long create_user_id;
-
-    public static Finder<Long, Room> find =
+    //controllersにfinderを触らせるのはやめよう！ということでprotected
+    protected static Finder<Long, Room> finder =
        new Finder<Long, Room>(Long.class, Room.class);
 
-}
+ }

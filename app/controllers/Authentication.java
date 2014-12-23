@@ -17,7 +17,7 @@ public class Authentication extends Controller {
 	 * loginページ表示
 	 */
     public static Result login(){
-    	return ok(login.render("Welcome!",form(Admin.class)));
+    	return ok(login.render("Welcome!",form(User.class)));
     }
     
 
@@ -25,26 +25,29 @@ public class Authentication extends Controller {
      * login成功時にcacheにlogin情報をセットする
      */
     public static Result authenticate(){
-    	Form<Admin> loginForm = form(Admin.class).bindFromRequest();
-    	if(loginForm.hasErrors()){
-    		return badRequest(views.html.login.render("Value is required", loginForm));
-    	}else{
+    	Form<User> form = form(User.class).bindFromRequest();
+    	if(form.hasErrors()){
+    		return badRequest(views.html.login.render("Value is required", form));
+    	} else {
     		//formからusernameとpasswordを取得
-    		String username = loginForm.get().getUsername();
-    		String password = loginForm.get().getPassword();
+    		User user = form.get();
+    		String username = user.username;
+    		String password = user.password;
 
     		//login処理
-    		if( Admin.authenticate(username, password) == true ){
+    		if(User.authenticate(username, password)){
     			//セッション作成
     			Secured.createSession(username);
+    			//セッションにユーザーをブチ込む
+    			Secured.setUserInfo(User.find(username));
     			//フォームオブジェクト生成
-    			Form<Book> f = new Form(Book.class);
+    			Form<Book> f = new Form<Book>(Book.class);
         	    //本一覧取得
-        	    List<Book> books = CommonUtility.findBookList();        
+        	    List<Book> books = Book.findAll();        
 
-    			return ok(index.render((String)Cache.get("login.key"),f,books));
+    			return ok(index.render((String)Cache.get("login.key"), f, books));
     		} else {
-        		return badRequest(views.html.login.render("Invalid username or password", loginForm));
+        		return badRequest(views.html.login.render("Invalid username or password", form));
     		}
     	}
     }

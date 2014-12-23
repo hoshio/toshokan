@@ -56,14 +56,16 @@
 	@for(book <- books) {
 		<tr>
 			<td>@book.book_name</td>
-			<td>@book.owner_name</td>
-			<td>@book.borrower</td>
+			<td>@book.owner.username</td>
+			<!-- ぬるポで落ちる・・・ -->
+			<td>ぬるぽで落ちる・・・
+			</td>
 			<td>
-			@if(book.bookStatus.equals("0")){
+			@if(book.bookStatus.equals("0")) {
 				@helper.form(action = routes.Application.borrowBook(book.id)) {
 					<input type="submit" value="借りる" class="btn btn-primary">
 				}
-			}else{
+			} else {
 				@helper.form(action = routes.Application.returnBook(book.id)) {
 					<input type="submit" value="返す" class="btn btn-primary">
 				}

@@ -1,35 +1,69 @@
 package models;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import java.util.*;
 
+import javax.persistence.*;
+
+import play.Logger;
 import play.data.validation.Constraints.Required;
 import play.db.ebean.Model;
 
 @Entity
+@Table(name="books")
 public class Book extends Model {
 
+	private static final long serialVersionUID = 1L;
+
 	@Id
-	public Long id;
+	public Long id;	
 
 	@Required
 	public String book_name;
+	
+	public String isbn_code;
+	
+	public String publisher;
+	
+	public String image_url;
+	
+	@ManyToOne(cascade = CascadeType.ALL)
+	public User owner;
+	
+	@ManyToOne(cascade = CascadeType.ALL)
+	public User borrower;
+	
+	@ManyToOne(cascade = CascadeType.ALL)
+	public Room room;
 
+	//TODO: owner_nameとborrower_nameは廃止
+	//登録時にセッションからownerをセットし、借りるときにセッションからborowerをセットする
+	
 	public String owner_name;
 
-	public String borrower;
+	public String borrower_name;
 
+	//貸出可の時は borrower == nullで判定可能なので不要？
 	// 0:貸出可, 1:貸出不可
 	public String bookStatus = "0";
 
 	// 0:通常, 1:削除済み
 	public String deleteStatus = "0";
-	public static Finder<Long, Book> find = new Finder<Long, Book>(Long.class,
-			Book.class);
+	
+	protected static Finder<Long, Book> finder =
+			new Finder<Long, Book>(Long.class, Book.class);
+	
+	public static Book find(Long id) {
+		return finder.byId(id);
+	}
+	
+	//TODO: 部屋ID対応。この実装は部屋エンティティの方が適切？？？
+	public static List<Book> findAll() {
+		return finder.where().eq("deleteStatus", "0").orderBy("id desc").findList();
+	}
 
+	//デバッグ用
 	@Override
     public String toString(){
-    	return("[id"+id+",book_name"+book_name+",owner_name"+owner_name+",borrower"+borrower+""
-    			+ ",bookStatus"+bookStatus+",deleteStatus"+deleteStatus+"]");
+    	return("[id: " + id + ", book_name" + book_name + ", owner: " + owner);
     }
 }

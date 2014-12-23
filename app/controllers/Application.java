@@ -2,6 +2,7 @@ package controllers;
 
 import java.util.*;
 //modelsパッケージ使うよね
+import common.*;
 import models.*;
 import views.html.*;
 //若干おまじない
@@ -21,7 +22,7 @@ public class Application extends Controller {
         //フォームオブジェクト生成
     	Form<Book> f = new Form(Book.class);
 	    //本一覧取得
-	    List<Book> books = CommonUtility.findBookList();        
+	    List<Book> books = Book.findAll();        
         return ok(index.render((String)Cache.get("login.key"), f, books));
 	}
 
@@ -32,7 +33,7 @@ public class Application extends Controller {
         //フォームオブジェクト生成
         Form<Book> f = new Form(Book.class);
 	    //本一覧取得
-	    List<Book> books = CommonUtility.findBookList();        
+	    List<Book> books = Book.findAll();        
         return ok(index.render((String)Cache.get("login.key"), f, books));
     }
 
@@ -47,15 +48,16 @@ public class Application extends Controller {
             //フォームにエラーがない場合、Messageインスタンスを取得
     		Book data = f.get();
     		data.owner_name = (String)Cache.get("login.key");
-    		data.borrower = null;
+    		data.borrower_name = null;
+    		//オーナー情報をセッションからセット
+    		data.owner = Secured.getUserInfo();
             //Messageインスタンスを保存
     		data.save();
             //Welcomeページにリダイレクト
     		return redirect("/");
     	} else {
     	    //本一覧取得
-    	    List<Book> books = CommonUtility.findBookList();        
-
+    	    List<Book> books = Book.findAll();        
     		return badRequest(index.render("ERROR", f, books));
     	}
     }
@@ -65,7 +67,7 @@ public class Application extends Controller {
      */
 	@Security.Authenticated(Secured.class)
     public static Result logicalDelete(Long id) {
-        Book book = Book.find.byId(id);
+        Book book = Book.find(id);
         if (book != null) {
             //deleteStatusを1に更新する。
             book.deleteStatus = "1";
@@ -75,7 +77,7 @@ public class Application extends Controller {
             //フォームオブジェクト生成
         	Form<Book> f = new Form(Book.class);
     	    //本一覧取得
-    	    List<Book> books = CommonUtility.findBookList();        
+    	    List<Book> books = Book.findAll();        
             return ok(index.render("ERROR:そのID番号は見つかりません",f,books));
         }
     }
@@ -84,14 +86,14 @@ public class Application extends Controller {
      * 物理削除機能
      */
     public static Result delete(Long id) {
-        Book obj = Book.find.byId(id);
+        Book obj = Book.find(id);
         if (obj != null) {
             obj.delete();
             return redirect("/");
         } else {
             Form<Book> f = new Form(Book.class);
     	    //本一覧取得
-    	    List<Book> books = CommonUtility.findBookList();        
+    	    List<Book> books = Book.findAll();        
 
             return ok(index.render("削除対象が見つかりませんでした", f, books));
         }
@@ -102,25 +104,28 @@ public class Application extends Controller {
      */
 	@Security.Authenticated(Secured.class)
     public static Result borrowBook(Long id) {
-        Book book = Book.find.byId(id);
+        Book book = Book.find(id);
         if (book != null) {
 			//sessionからユーザー名を取得
         	String username = (String)Cache.get("login.key");
+        	User borrower = Secured.getUserInfo();
         	//Book情報の更新
         	book.bookStatus= book.bookStatus.equals("0")?"1":"0";
-			book.borrower = username;
+			book.borrower_name = username;
 			book.update();
 
 			//メール送信
-			Admin owner = Admin.find.where().eq("username", book.owner_name).findUnique();
-			CommonUtility.SendMail(owner.email, username, book.book_name);
+			User owner = User.find(book.owner_name);
+			
+			Mailer mailer = new Mailer(owner.email, borrower.username , book.book_name);
+			mailer.start();
 			
             return redirect("/");
         } else {
             //フォームオブジェクト生成
         	Form<Book> f = new Form(Book.class);
     	    //本一覧取得
-    	    List<Book> books = CommonUtility.findBookList();        
+    	    List<Book> books = Book.findAll();        
             return ok(index.render("ERROR:そのID番号は見つかりません",f,books));
         }
     }
@@ -130,17 +135,17 @@ public class Application extends Controller {
      */
 	@Security.Authenticated(Secured.class)
     public static Result returnBook(Long id) {
-        Book book = Book.find.byId(id);
+        Book book = Book.find(id);
         if (book != null) {
         	book.bookStatus= book.bookStatus.equals("0")?"1":"0";
-        	book.borrower = "";
+        	book.borrower_name = "";
         	book.update();
             return redirect("/");
         } else {
             //フォームオブジェクト生成
         	Form<Book> f = new Form(Book.class);
     	    //本一覧取得
-    	    List<Book> books = CommonUtility.findBookList();        
+    	    List<Book> books = Book.findAll();        
             return ok(index.render("ERROR:そのID番号は見つかりません",f,books));
         }
     }
