@@ -18,13 +18,15 @@ public class Book extends Model {
 	public Long id;	
 
 	@Required
-	public String book_name;
-	
 	public String isbn_code;
+	
+	public String book_name;
 	
 	public String publisher;
 	
-	public String image_url;
+	public String author;
+	
+	public String image;
 	
 	@ManyToOne(cascade = CascadeType.ALL)
 	public User owner;

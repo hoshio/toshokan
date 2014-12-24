@@ -5,10 +5,11 @@
 
 create table books (
   id                        bigint not null,
-  book_name                 varchar(255),
   isbn_code                 varchar(255),
+  book_name                 varchar(255),
   publisher                 varchar(255),
-  image_url                 varchar(255),
+  author                    varchar(255),
+  image                     varchar(255),
   owner_id                  bigint,
   borrower_id               bigint,
   room_id                   bigint,

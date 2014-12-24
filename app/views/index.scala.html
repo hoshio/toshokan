@@ -36,10 +36,7 @@
 		<div class="form-inline regist" role="form">
 	<label>あなたの持っている本を登録しましょう</label>
 		@helper.form(action = routes.Application.register) {
-<!-- 			@(helper.inputText (
-				field = form1("book_name")
-			)) -->
-		<input type="text" class="form-control" name="book_name" placeholder="本の名前">
+		<input type="text" class="form-control" name="isbn_code" placeholder="ISBNコード">
 		<input type="submit" value="登録" class="btn btn-primary" id="register">
 		}
 		</div>
@@ -47,7 +44,10 @@
 	</center>
 	<table class="table table-striped">
 	<tr>
+		<th>画像</th>
 		<th>本の名前</th>
+		<th>著者</th>
+		<th>出版社</th>
 		<th>持ち主</th>
 		<th>借り人</th>
 		<th>貸借</th>
@@ -55,11 +55,12 @@
 	</tr>
 	@for(book <- books) {
 		<tr>
+		    <td><img src=@book.image></td> 
 			<td>@book.book_name</td>
-			<td>@book.owner.username</td>
-			<!-- ぬるポで落ちる・・・ -->
-			<td>ぬるぽで落ちる・・・
-			</td>
+			<td>@book.author</td>
+			<td>@book.publisher</td>
+			<td>@book.owner_name</td>
+			<td>@book.borrower</td>
 			<td>
 			@if(book.bookStatus.equals("0")) {
 				@helper.form(action = routes.Application.borrowBook(book.id)) {

@@ -1,10 +1,10 @@
 package controllers;
 
 import static play.data.Form.form;
-import models.Admin;
+import common.Constants;
+import models.User;
 import play.cache.Cache;
 import play.data.Form;
-import play.mvc.Http;
 import play.mvc.Http.Context;
 import play.mvc.Result;
 import play.mvc.Security;
@@ -31,7 +31,7 @@ public class Secured extends Security.Authenticator{
 	public static void updateSession(String session)
     {
         // アプリケーションキャッシュの有効期限を更新
-        Cache.set("login.key", session, 10);
+        Cache.set("login.key", session, Constants.Session.duration);
     }
 	
     /**
@@ -46,6 +46,22 @@ public class Secured extends Security.Authenticator{
 		    strCache = strCache.toString();
 		}
 	}
+    
+    //セッションにはユーザー名称だけでなく、Userそのものを追加したい。
+    public static void setUserInfo(User user) {
+    	Cache.set(Constants.Session.key, user, Constants.Session.duration);
+    }
+    
+    //ユーザー情報の取得。同時にセッション更新
+    public static User getUserInfo() {
+    	User user = (User)Cache.get(Constants.Session.key);
+    	if (user == null) {
+    		return null;
+    	} else {
+    		setUserInfo(user);
+    		return user;
+    	}
+    }
 
 	
 	/*
@@ -56,7 +72,7 @@ public class Secured extends Security.Authenticator{
 	 */
 	@Override
 	public Result onUnauthorized(Context ctx){
-    	Form<Admin> loginForm = form(Admin.class).bindFromRequest();
+    	Form<User> loginForm = form(User.class).bindFromRequest();
 		return badRequest(views.html.login.render("session timeout", loginForm));
 //		return redirect(controllers.routes.Authentication.login());
 	}

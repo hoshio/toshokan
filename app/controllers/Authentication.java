@@ -1,6 +1,10 @@
 package controllers;
 
 import java.util.*;
+
+import common.KeyManager;
+
+import controllers.Secured;
 //modelsパッケージ使うよね
 import models.*;
 import views.html.*;
@@ -19,7 +23,6 @@ public class Authentication extends Controller {
     public static Result login(){
     	return ok(login.render("Welcome!",form(User.class)));
     }
-    
 
     /*
      * login成功時にcacheにlogin情報をセットする

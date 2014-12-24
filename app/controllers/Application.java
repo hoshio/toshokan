@@ -1,16 +1,22 @@
 package controllers;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import models.*;
 //modelsパッケージ使うよね
 import common.*;
-import models.*;
-import views.html.*;
-//若干おまじない
-import play.*;
-import play.data.*;
-import static play.data.Form.*;
-import play.mvc.*;
+import controllers.Secured;
+import models.Book;
+import play.Logger;
 import play.cache.Cache;
+import play.data.Form;
+import play.mvc.Controller;
+import play.mvc.Result;
+import play.mvc.Security;
+import views.html.index;
+//若干おまじない
 
 public class Application extends Controller {
 
@@ -47,10 +53,17 @@ public class Application extends Controller {
     	if (!f.hasErrors()) {
             //フォームにエラーがない場合、Messageインスタンスを取得
     		Book data = f.get();
-    		data.owner_name = (String)Cache.get("login.key");
-    		data.borrower_name = null;
-    		//オーナー情報をセッションからセット
+    		
+    		//ISBNコードより書籍情報を取得する(見つからないとぬるポで落ちる)
+    		try {
+    			ItemLookup.setBookInf(data);	
+    		} catch (RuntimeException e) {
+    			return badRequest(index.render("本が見つかりませんでした", f, Book.findAll()));
+    		}
+    		
     		data.owner = Secured.getUserInfo();
+    		data.owner_name = (String)Cache.get("login.key");
+    		data.borrower = null;
             //Messageインスタンスを保存
     		data.save();
             //Welcomeページにリダイレクト

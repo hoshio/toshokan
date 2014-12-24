@@ -35,5 +35,5 @@ public class Mailer extends Thread {
     	} catch(EmailException e) {
     	    Logger.error(e.toString(), e);
     	}
-	}
+	}	
 }
