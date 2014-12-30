@@ -13,9 +13,6 @@ create table books (
   owner_id                  bigint,
   borrower_id               bigint,
   room_id                   bigint,
-  owner_name                varchar(255),
-  borrower_name             varchar(255),
-  book_status               varchar(255),
   delete_status             varchar(255),
   constraint pk_books primary key (id))
 ;

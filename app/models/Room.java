@@ -1,15 +1,13 @@
 package models;
 
-import java.util.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
-import javax.persistence.*;
-import javax.validation.*;
-
-import com.avaje.ebean.annotation.*;
-
-import play.db.ebean.*;
-import play.data.validation.*;
-import play.data.validation.Constraints.*;
+import play.data.validation.Constraints.Required;
+import play.db.ebean.Model;
  
 @Entity
 @Table(name = "rooms")
@@ -26,8 +24,8 @@ public class Room extends Model {
     @ManyToOne(cascade = CascadeType.ALL)
     public User create_user;
     
-    @OneToMany(cascade = CascadeType.ALL)
-    public List<Book> books;
+//    @OneToMany(cascade = CascadeType.ALL)
+//    public List<Book> books;
 
     //controllersにfinderを触らせるのはやめよう！ということでprotected
     protected static Finder<Long, Room> finder =

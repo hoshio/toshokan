@@ -1,15 +1,17 @@
 package controllers;
 
-import java.util.*;
-//modelsパッケージ使うよね
-import models.*;
-import views.html.*;
+import static play.data.Form.form;
+
+import java.util.List;
+
+import models.Book;
+import models.User;
+import play.data.Form;
+import play.mvc.Controller;
+import play.mvc.Result;
+import views.html.index;
+import views.html.reg;
 //若干おまじない
-import play.*;
-import play.cache.Cache;
-import play.data.*;
-import static play.data.Form.*;
-import play.mvc.*;
 
 public class Registration extends Controller {
 
@@ -49,11 +51,13 @@ public class Registration extends Controller {
         		return badRequest(views.html.reg.render(form));
     		}
     		
+			Secured.setUserInfo(User.find(username));
+    		
     		//フォームオブジェクト生成
-    	    Form<Book> f = new Form(Book.class);
+    	    Form<Book> f = new Form<Book>(Book.class);
     	    //本一覧取得
     	    List<Book> books = Book.findAll();        
-			return ok(index.render((String)Cache.get("login.key"),f,books));
+			return ok(index.render("登録ありがとうございます", Secured.getUserInfo(), f, books));
     	}
     }
 }

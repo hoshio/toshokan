@@ -1,19 +1,17 @@
 package controllers;
 
-import java.util.*;
+import static play.data.Form.form;
 
-import common.KeyManager;
+import java.util.List;
 
-import controllers.Secured;
-//modelsパッケージ使うよね
-import models.*;
-import views.html.*;
+import models.Book;
+import models.User;
+import play.data.Form;
+import play.mvc.Controller;
+import play.mvc.Result;
+import views.html.index;
+import views.html.login;
 //若干おまじない
-import play.*;
-import play.data.*;
-import static play.data.Form.*;
-import play.mvc.*;
-import play.cache.Cache;
 
 public class Authentication extends Controller {
 
@@ -48,9 +46,9 @@ public class Authentication extends Controller {
         	    //本一覧取得
         	    List<Book> books = Book.findAll();        
 
-    			return ok(index.render((String)Cache.get("login.key"), f, books));
+    			return ok(index.render(null, Secured.getUserInfo(), f, books));
     		} else {
-        		return badRequest(views.html.login.render("Invalid username or password", form));
+        		return badRequest(login.render("Invalid username or password", form));
     		}
     	}
     }

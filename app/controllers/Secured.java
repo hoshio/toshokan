@@ -1,13 +1,14 @@
 package controllers;
 
 import static play.data.Form.form;
-import common.Constants;
 import models.User;
 import play.cache.Cache;
 import play.data.Form;
 import play.mvc.Http.Context;
 import play.mvc.Result;
 import play.mvc.Security;
+
+import common.Constants;
 
 public class Secured extends Security.Authenticator{
 	
@@ -31,7 +32,7 @@ public class Secured extends Security.Authenticator{
 	public static void updateSession(String session)
     {
         // アプリケーションキャッシュの有効期限を更新
-        Cache.set("login.key", session, Constants.Session.duration);
+        Cache.set("login.key", session);
     }
 	
     /**
@@ -47,9 +48,9 @@ public class Secured extends Security.Authenticator{
 		}
 	}
     
-    //セッションにはユーザー名称だけでなく、Userそのものを追加したい。
+    //セッションにユーザー情報を保存。
     public static void setUserInfo(User user) {
-    	Cache.set(Constants.Session.key, user, Constants.Session.duration);
+    	Cache.set(Constants.Session.key, user);
     }
     
     //ユーザー情報の取得。同時にセッション更新
@@ -60,6 +61,13 @@ public class Secured extends Security.Authenticator{
     	} else {
     		setUserInfo(user);
     		return user;
+    	}
+    }
+    
+    public static void removeUserInfo() {
+    	User user = getUserInfo();
+    	if (user != null){
+    		Cache.remove(Constants.Session.key);
     	}
     }
 

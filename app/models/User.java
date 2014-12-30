@@ -1,8 +1,11 @@
 package models;
 
 import java.io.Serializable;
+import java.util.List;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
 import play.data.validation.Constraints;
 import play.db.ebean.Model;
@@ -46,6 +49,10 @@ public class User extends Model implements Serializable{
 	
 	public static User find(String name, String email) {
 		return finder.where().eq("username", name).eq("email", email).findUnique();
+	}
+	
+	public static List<User> findForDump() {
+		return finder.where().orderBy("id asc").findList();
 	}
 	
 	@Override

@@ -1,0 +1,59 @@
+@(form1: Form[Book], books: List[Book], users: List[User])
+<html>
+<head>
+<meta charset="UTF-8">
+<title>開発者用ダンプツール</title>
+</head>
+<body>
+	<h4>一括登録</h4>
+	ISBNコードをカンマ区切りで指定して一括登録します (ログインしていない場合、適当なユーザーを探してその人のものにします。)<br>
+	例) 9784088802190, 9784798133928, 9784777124428
+	@helper.form(action = routes.Dump.register) {
+		<input type="text" name="isbn_code" size="100">
+		<input type="submit" value="登録">
+	}
+	
+	<h4>DBダンプ</h4>
+	<label>・Books</label>
+	<table border="1">
+	<tr>
+		<th>ID</th>
+		<th>本の名前</th>
+		<th>著者</th>
+		<th>出版社</th>
+		<th>持ち主ID</th>
+		<th>借り人ID</th>
+		<th>削除</th>
+	</tr>
+	</tr>
+	@for(book <- books) {
+		<tr>
+		<td>@book.id</td>
+		<td>@book.book_name</td>
+		<td>@book.author</td>
+		<td>@book.publisher</td>
+		<td>@book.owner.id</td>
+		<td>@if(book.borrower != null) {@book.borrower.id}</td>
+		<td>@book.deleteStatus</td>
+		</tr>
+	}
+	</table>
+	<br>
+	<label>・Users</label>
+	<table border="1">
+	<tr>
+		<th>ID</th>
+		<th>名前</th>
+		<th>メール</th>
+	</tr>	
+	@for(user <- users) {
+	<tr>
+		<td>@user.id</td>
+		<td>@user.username</td>
+		<td>@user.email</td>
+	</tr>	
+	}	
+	</table>
+
+</body>
+</html>

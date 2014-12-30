@@ -1,22 +1,17 @@
 package controllers;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import models.*;
-//modelsパッケージ使うよね
-import common.*;
-import controllers.Secured;
 import models.Book;
-import play.Logger;
+import models.User;
 import play.cache.Cache;
 import play.data.Form;
 import play.mvc.Controller;
 import play.mvc.Result;
 import play.mvc.Security;
 import views.html.index;
-//若干おまじない
+
+import common.Mailer;
 
 public class Application extends Controller {
 
@@ -26,10 +21,10 @@ public class Application extends Controller {
 	@Security.Authenticated(Secured.class)
     public static Result index() {
         //フォームオブジェクト生成
-    	Form<Book> f = new Form(Book.class);
+    	Form<Book> f = new Form<Book>(Book.class);
 	    //本一覧取得
 	    List<Book> books = Book.findAll();        
-        return ok(index.render((String)Cache.get("login.key"), f, books));
+        return ok(index.render(null, Secured.getUserInfo(), f, books));
 	}
 
 	/*
@@ -37,10 +32,10 @@ public class Application extends Controller {
 	 */
     public static Result initview() {
         //フォームオブジェクト生成
-        Form<Book> f = new Form(Book.class);
+        Form<Book> f = new Form<Book>(Book.class);
 	    //本一覧取得
 	    List<Book> books = Book.findAll();        
-        return ok(index.render((String)Cache.get("login.key"), f, books));
+        return ok(index.render(null, Secured.getUserInfo(), f, books));
     }
 
     /*
@@ -49,7 +44,7 @@ public class Application extends Controller {
 	@Security.Authenticated(Secured.class)
     public static Result register() {
         //requestからフォームインスタンスを取得
-    	Form<Book> f = new Form(Book.class).bindFromRequest();
+    	Form<Book> f = new Form<Book>(Book.class).bindFromRequest();
     	if (!f.hasErrors()) {
             //フォームにエラーがない場合、Messageインスタンスを取得
     		Book data = f.get();
@@ -58,11 +53,10 @@ public class Application extends Controller {
     		try {
     			ItemLookup.setBookInf(data);	
     		} catch (RuntimeException e) {
-    			return badRequest(index.render("本が見つかりませんでした", f, Book.findAll()));
+    			return badRequest(index.render("本が見つかりませんでした", Secured.getUserInfo(),f, Book.findAll()));
     		}
     		
     		data.owner = Secured.getUserInfo();
-    		data.owner_name = (String)Cache.get("login.key");
     		data.borrower = null;
             //Messageインスタンスを保存
     		data.save();
@@ -71,7 +65,7 @@ public class Application extends Controller {
     	} else {
     	    //本一覧取得
     	    List<Book> books = Book.findAll();        
-    		return badRequest(index.render("ERROR", f, books));
+    		return badRequest(index.render("ERROR", Secured.getUserInfo(), f, books));
     	}
     }
 
@@ -88,10 +82,10 @@ public class Application extends Controller {
             return redirect("/");
         } else {
             //フォームオブジェクト生成
-        	Form<Book> f = new Form(Book.class);
+        	Form<Book> f = new Form<Book>(Book.class);
     	    //本一覧取得
     	    List<Book> books = Book.findAll();        
-            return ok(index.render("ERROR:そのID番号は見つかりません",f,books));
+            return ok(index.render("ERROR:そのID番号は見つかりません", Secured.getUserInfo(), f,books));
         }
     }
     
@@ -104,11 +98,11 @@ public class Application extends Controller {
             obj.delete();
             return redirect("/");
         } else {
-            Form<Book> f = new Form(Book.class);
+            Form<Book> f = new Form<Book>(Book.class);
     	    //本一覧取得
     	    List<Book> books = Book.findAll();        
 
-            return ok(index.render("削除対象が見つかりませんでした", f, books));
+            return ok(index.render("削除対象が見つかりませんでした", Secured.getUserInfo(), f, books));
         }
     }
     
@@ -120,26 +114,21 @@ public class Application extends Controller {
         Book book = Book.find(id);
         if (book != null) {
 			//sessionからユーザー名を取得
-        	String username = (String)Cache.get("login.key");
         	User borrower = Secured.getUserInfo();
         	//Book情報の更新
-        	book.bookStatus= book.bookStatus.equals("0")?"1":"0";
-			book.borrower_name = username;
+        	book.borrower = borrower;
 			book.update();
-
 			//メール送信
-			User owner = User.find(book.owner_name);
-			
+			User owner = User.find(book.owner.username);
 			Mailer mailer = new Mailer(owner.email, borrower.username , book.book_name);
 			mailer.start();
-			
             return redirect("/");
         } else {
             //フォームオブジェクト生成
-        	Form<Book> f = new Form(Book.class);
+        	Form<Book> f = new Form<Book>(Book.class);
     	    //本一覧取得
     	    List<Book> books = Book.findAll();        
-            return ok(index.render("ERROR:そのID番号は見つかりません",f,books));
+            return ok(index.render("ERROR:そのID番号は見つかりません", Secured.getUserInfo(), f,books));
         }
     }
     
@@ -150,16 +139,15 @@ public class Application extends Controller {
     public static Result returnBook(Long id) {
         Book book = Book.find(id);
         if (book != null) {
-        	book.bookStatus= book.bookStatus.equals("0")?"1":"0";
-        	book.borrower_name = "";
+        	book.borrower = null;
         	book.update();
             return redirect("/");
         } else {
             //フォームオブジェクト生成
-        	Form<Book> f = new Form(Book.class);
+        	Form<Book> f = new Form<Book>(Book.class);
     	    //本一覧取得
     	    List<Book> books = Book.findAll();        
-            return ok(index.render("ERROR:そのID番号は見つかりません",f,books));
+            return ok(index.render("ERROR", Secured.getUserInfo(), f, books));
         }
     }
 
@@ -169,7 +157,7 @@ public class Application extends Controller {
     public static Result logout(){
     	//セッションクリア
     	Cache.remove("login.key");
-
+    	Secured.removeUserInfo();
     	return redirect(routes.Authentication.login());
     }
 }

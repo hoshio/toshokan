@@ -3,12 +3,6 @@
 # ~~~~
 
 # Home page
-##################################################################################
-# routesの書き方 
-# HTTPメソッド アドレス メソッド名を記入する
-# 例) login.scala.htmlにPOSTでアクセスしたら、Authentication.javaのloginを実行する場合
-# => POST /login                    controllers.Authentication.login()
-##################################################################################
 GET     /                           controllers.Application.index()
 GET		/libraly					controllers.Application.initview()
 POST	/libraly					controllers.Application.register()
@@ -25,6 +19,8 @@ GET     /register                   controllers.Registration.register()
 GET     /reg                        controllers.Registration.regPage()
 GET     /authenticate               controllers.Authentication.authenticate()
 
+GET     /dump		                controllers.Dump.init()
+POST    /dump		                controllers.Dump.register()
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.at(path="/public", file)

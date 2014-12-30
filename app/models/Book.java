@@ -1,10 +1,13 @@
 package models;
 
-import java.util.*;
+import java.util.List;
 
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
-import play.Logger;
 import play.data.validation.Constraints.Required;
 import play.db.ebean.Model;
 
@@ -37,17 +40,6 @@ public class Book extends Model {
 	@ManyToOne(cascade = CascadeType.ALL)
 	public Room room;
 
-	//TODO: owner_nameとborrower_nameは廃止
-	//登録時にセッションからownerをセットし、借りるときにセッションからborowerをセットする
-	
-	public String owner_name;
-
-	public String borrower_name;
-
-	//貸出可の時は borrower == nullで判定可能なので不要？
-	// 0:貸出可, 1:貸出不可
-	public String bookStatus = "0";
-
 	// 0:通常, 1:削除済み
 	public String deleteStatus = "0";
 	
@@ -61,6 +53,10 @@ public class Book extends Model {
 	//TODO: 部屋ID対応。この実装は部屋エンティティの方が適切？？？
 	public static List<Book> findAll() {
 		return finder.where().eq("deleteStatus", "0").orderBy("id desc").findList();
+	}
+	
+	public static List<Book> findForDump() {
+		return finder.where().orderBy("id asc").findList();
 	}
 
 	//デバッグ用
