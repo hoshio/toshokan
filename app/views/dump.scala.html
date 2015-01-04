@@ -1,4 +1,4 @@
-@(form1: Form[Book], books: List[Book], users: List[User])
+@(form1: Form[Book], books: List[Book], users: List[User], rooms: List[Room])
 <html>
 <head>
 <meta charset="UTF-8">
@@ -23,6 +23,7 @@
 		<th>出版社</th>
 		<th>持ち主ID</th>
 		<th>借り人ID</th>
+		<th>部屋ID</th>
 		<th>削除</th>
 	</tr>
 	</tr>
@@ -34,6 +35,7 @@
 		<td>@book.publisher</td>
 		<td>@book.owner.id</td>
 		<td>@if(book.borrower != null) {@book.borrower.id}</td>
+		<td>@if(book.room != null) {@book.room.id}</td>
 		<td>@book.deleteStatus</td>
 		</tr>
 	}
@@ -51,6 +53,22 @@
 		<td>@user.id</td>
 		<td>@user.username</td>
 		<td>@user.email</td>
+	</tr>	
+	}	
+	</table>
+	<br>
+	<label>・Rooms</label>
+	<table border="1">
+	<tr>
+		<th>ID</th>
+		<th>名前</th>
+		<th>作成者ID</th>
+	</tr>	
+	@for(room <- rooms) {
+	<tr>
+		<td>@room.id</td>
+		<td>@room.room_name</td>
+		<td>@room.create_user.id</td>
 	</tr>	
 	}	
 	</table>

@@ -1,4 +1,4 @@
-@(msg: String, user: User, form1 : Form[Book], books : List[Book])
+@(room : Room, msg: String, user: User, form1 : Form[Book], books : List[Book])
 
 <!DOCTYPE html>
 
@@ -36,7 +36,7 @@
 	<div class="container">
 		<div class="form-inline regist" role="form">
 		<label>あなたの持っている本を登録しましょう</label>
-		@helper.form(action = routes.Application.register(0)) {
+		@helper.form(action = routes.Application.register(room.id)) {
 			<input type="text" class="form-control" name="isbn_code" placeholder="ISBNコード">
 			<input type="submit" value="登録" class="btn btn-primary" id="register">
 		}
@@ -92,4 +92,3 @@
 	</div>
     </body>
 </html>
- 

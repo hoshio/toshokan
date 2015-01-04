@@ -41,12 +41,8 @@ public class Authentication extends Controller {
     			Secured.createSession(username);
     			//セッションにユーザーをブチ込む
     			Secured.setUserInfo(User.find(username));
-    			//フォームオブジェクト生成
-    			Form<Book> f = new Form<Book>(Book.class);
-        	    //本一覧取得
-        	    List<Book> books = Book.findAll();        
 
-    			return ok(index.render(null, Secured.getUserInfo(), f, books));
+    			return redirect(routes.Roomlist.init());
     		} else {
         		return badRequest(login.render("Invalid username or password", form));
     		}

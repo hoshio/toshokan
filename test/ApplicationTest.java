@@ -1,25 +1,10 @@
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import static org.fest.assertions.Assertions.assertThat;
 
-import javax.jws.soap.InitParam;
+import models.Book;
 
-import com.fasterxml.jackson.databind.JsonNode;
+import org.junit.Test;
 
-import org.junit.*;
-
-import play.mvc.*;
-import play.test.*;
-import play.data.DynamicForm;
-import play.data.validation.ValidationError;
-import play.data.validation.Constraints.RequiredValidator;
-import play.i18n.Lang;
-import play.libs.F;
-import play.libs.F.*;
-import play.twirl.api.Content;
-import static play.test.Helpers.*;
-import static org.fest.assertions.Assertions.*;
+import controllers.ItemLookup;
 
 
 /**
@@ -29,19 +14,21 @@ import static org.fest.assertions.Assertions.*;
 *
 */
 public class ApplicationTest {
-
+	
 	@Test
     public void simpleCheck() {
         int a = 1 + 1;
         assertThat(a).isEqualTo(2);
     }
-
-//    @Test
-//    public void renderTemplate() {
-//        Content html = views.html.index.render("Your new application is ready.");
-//        assertThat(contentType(html)).isEqualTo("text/html");
-//        assertThat(contentAsString(html)).contains("Your new application is ready.");
-//    }
-
+	
+	@Test
+	public void setBookInfTest() {
+		Book book = new Book();
+		book.isbn_code = "9784798133928";
+		ItemLookup.setBookInf(book);
+		assertThat("Play Framework 2徹底入門 JavaではじめるアジャイルWeb開発").isEqualTo(book.book_name);
+		assertThat("掌田 津耶乃").isEqualTo(book.author);
+		assertThat("翔泳社").isEqualTo(book.publisher);
+	}
 
 }

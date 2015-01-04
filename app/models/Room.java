@@ -1,5 +1,7 @@
 package models;
 
+import java.util.List;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -23,12 +25,21 @@ public class Room extends Model {
     
     @ManyToOne(cascade = CascadeType.ALL)
     public User create_user;
-    
-//    @OneToMany(cascade = CascadeType.ALL)
-//    public List<Book> books;
 
     //controllersにfinderを触らせるのはやめよう！ということでprotected
     protected static Finder<Long, Room> finder =
        new Finder<Long, Room>(Long.class, Room.class);
+    
+    public static Room findById(Long id) {
+    	return finder.byId(id);
+    }
+    
+    public static List<Room> findAll() {
+    	return finder.all();
+    }
+    
+    public String toString() {
+    	return String.join(id + "," + room_name + "," + create_user.id);
+    }
 
  }

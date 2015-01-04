@@ -11,11 +11,10 @@ import javax.persistence.Table;
 import play.data.validation.Constraints.Required;
 import play.db.ebean.Model;
 
+@SuppressWarnings("serial")
 @Entity
 @Table(name="books")
 public class Book extends Model {
-
-	private static final long serialVersionUID = 1L;
 
 	@Id
 	public Long id;	
@@ -50,13 +49,17 @@ public class Book extends Model {
 		return finder.byId(id);
 	}
 	
-	//TODO: 部屋ID対応。この実装は部屋エンティティの方が適切？？？
+	//TODO: そのうち消す
 	public static List<Book> findAll() {
 		return finder.where().eq("deleteStatus", "0").orderBy("id desc").findList();
 	}
 	
+	public static List<Book> findAll(Long room_id) {
+		return finder.where().eq("room_id", room_id).eq("deleteStatus", "0").orderBy("id desc").findList();
+	}
+	
 	public static List<Book> findForDump() {
-		return finder.where().orderBy("id asc").findList();
+		return finder.where().orderBy("room_id asc").findList();
 	}
 
 	//デバッグ用

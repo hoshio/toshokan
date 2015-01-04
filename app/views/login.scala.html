@@ -26,13 +26,15 @@
 		<p><input type="text" name="username" class="form-control" placeholder="Username" value="@form("username").value"></p>
 		<p><input type="password" name="password" class="form-control" placeholder="Password"></p>
 		<p><input type="submit" value="Login" class="btn btn-primary"></p>
-		</div>
+	</div>
 	</div>
 	}
 	
+	<div class="container">
 	@helper.form(action = (routes.Registration.regPage())) {
 		<input type="submit" value="Registration Page" class="btn btn-danger">
 	}
+	</div>
 	
 	</body>
 </html>

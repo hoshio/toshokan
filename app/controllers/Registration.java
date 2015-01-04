@@ -53,7 +53,6 @@ public class Registration extends Controller {
     		
 			Secured.setUserInfo(User.find(username));
     		
-    		//フォームオブジェクト生成
     	    Form<Book> f = new Form<Book>(Book.class);
     	    //本一覧取得
     	    List<Book> books = Book.findAll();        
