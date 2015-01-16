@@ -1,71 +1,58 @@
-@(room : Room, msg: String, user: User, form1 : Form[Book], books : List[Book])
+@(room : Room, msg: String, user: User, form1 : Form[Book], books :
+List[Book])
 
 <!DOCTYPE html>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 
 <html>
-    <head>
-    @tag.header()
-    </head>
-    <body>
-	@tag.title(msg,user)
+<head>@tag.header()
+</head>
+<body>
+	@tag.title(user)
 	<center>
-	<div class="container">
-		<div class="form-inline regist" role="form">
-		<label>あなたの持っている本を登録しましょう</label>
-		@helper.form(action = routes.Application.register(room.id)) {
-			<input type="text" class="form-control" name="isbn_code" placeholder="ISBNコード">
-			<input type="submit" value="登録" class="btn btn-primary" id="register">
-		}
+	@msg
+		<div class="container">
+			<div class="form-inline regist" role="form">
+				<label>あなたの持っている本を登録しましょう</label> @helper.form(action =
+				routes.Application.register(room.id)) { <input type="text"
+					class="form-control" name="isbn_code" placeholder="ISBNコード">
+				<input type="submit" value="登録" class="btn btn-primary"
+					id="register"> }
+			</div>
 		</div>
-	</div>	
 	</center>
 	<div class="container">
-	<table class="table table-striped">
-	<tr>
-		<th>画像</th>
-		<th>本の名前</th>
-		<th>著者</th>
-		<th>出版社</th>
-		<th>持ち主</th>
-		<th>借り人</th>
-		<th></th>
-	</tr>
-	@for(book <- books) {
-		<tr>
-		    <td><img src=@book.image></td> 
-			<td>@book.book_name</td>
-			<td>@book.author</td>
-			<td>@book.publisher</td>
-			<td>@book.owner.username</td>
-			<td>
- 			@if(book.borrower != null) {
-				@book.borrower.username
+		<table class="table table-striped">
+			<tr>
+				<th>画像</th>
+				<th>本の名前</th>
+				<th>著者</th>
+				<th>出版社</th>
+				<th>持ち主</th>
+				<th>借り人</th>
+				<th></th>
+			</tr>
+			@for(book <- books) {
+			<tr>
+				<td><img src=@book.image></td>
+				<td>@book.book_name</td>
+				<td>@book.author</td>
+				<td>@book.publisher</td>
+				<td>@book.owner.username</td>
+				<td>@if(book.borrower != null) { @book.borrower.username }</td>
+				<td>@if(book.owner.id == user.id) { @helper.form(action =
+					routes.Application.logicalDelete(book.id)) { <input type="submit"
+					value="削除" class="btn btn-danger"> } } else {
+					@if(book.borrower == null) { @helper.form(action =
+					routes.Application.borrowBook(book.id)) { <input type="submit"
+					value="借りる" class="btn btn-primary"> } } else {
+					@if(book.borrower.id == user.id) { @helper.form(action =
+					routes.Application.returnBook(book.id)) { <input type="submit"
+					value="返す" class="btn btn-primary"> } } else {
+					<button class="btn btn-default" disabled>貸出中</button> } } }
+				</td>
+			</tr>
 			}
-			</td>
-			<td>
-			@if(book.owner.id == user.id) {
-				@helper.form(action = routes.Application.logicalDelete(book.id)) {
-					<input type="submit" value="削除" class="btn btn-danger">
-				}			
-			} else { 
-				@if(book.borrower == null) {
-					@helper.form(action = routes.Application.borrowBook(book.id)) {
-						<input type="submit" value="借りる" class="btn btn-primary">
-					}
-				} else {
-					@if(book.borrower.id == user.id) {
-						@helper.form(action = routes.Application.returnBook(book.id)) {
-							<input type="submit" value="返す" class="btn btn-primary">
-						}			
-					} else {
-						<button class="btn btn-default" disabled>貸出中</button>
-					}
-				}
-			}
-			</td>
-		</tr>
-	}
-	</div>
-    </body>
+			</div>
+</body>
 </html>

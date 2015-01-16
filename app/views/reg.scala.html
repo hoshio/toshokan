@@ -1,16 +1,15 @@
 @(form: play.data.Form[models.User])
 
 <html>
-<head>
-@tag.header()
+<head>@tag.header()
 <body>
-	<header>
-		<h1>Registration</h1>
-	</header>
-	@helper.form(action = routes.Registration.register()){
-	@if(form.hasGlobalErrors){
-	<p class="error">@form.globalError.message</p>
-	}
+	<div class="container">
+		<h3 class="page-header text-primary">
+			Registration @helper.form(action = routes.Registration.register()){
+			@if(form.hasGlobalErrors){
+			<p class="error">@form.globalError.message</p>
+			}
+	</div>
 	<div class="container">
 		<div class="col-xs-3">
 			<p>

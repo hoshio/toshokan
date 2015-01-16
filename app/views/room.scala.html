@@ -1,19 +1,20 @@
 @(msg: String, user: User,rooms: List[Room], form1: Form[Room])
 
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 
 <html>
-    <head>
-    @tag.header()
-    </head>
+<head>@tag.header()
+</head>
 <body>
-	@tag.title(msg,user)
+	@tag.title(user)
 	<center>
 	<div class="container">
+	@msg
 		<div class="form-inline regist" role="form">
 		<label>新しく部屋を作る</label>
 		@helper.form(action = routes.Roomlist.register) {
-			<input type="text" class="form-control" name="room_name" placeholder="部屋の名前">
+			<input type="text" class="form-control" name="room_name"
+					placeholder="部屋の名前">
 			<input type="submit" value="登録" class="btn btn-primary" id="register">
 		}
 		</div>
@@ -31,11 +32,12 @@
 		<tr>
 			<td>@room.room_name</td>
 			<td>@room.create_user.username</td>
-			<td><a href="@{routes.Application.init(room.id, "Welcome")}">入室する</a></td>
+			<td><a href="@{routes.Application.init(room.id, "")}">入室する</a></td>
 		</tr>
 	}
 	</div>
 	</table>
+
 
 </body>
 </html>
