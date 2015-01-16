@@ -1,37 +1,14 @@
 @(room : Room, msg: String, user: User, form1 : Form[Book], books : List[Book])
 
 <!DOCTYPE html>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 
 <html>
     <head>
-    	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-        <link rel="stylesheet" media="screen" href="@routes.Assets.at("bootstrap/css/bootstrap.css")" >
-        <link rel="stylesheet" media="screen" href="@routes.Assets.at("bootstrap/css/bootstrap-responsive.css")" >
-        <link rel="shortcut icon" type="image/png" href="@routes.Assets.at("images/favicon.png")">
-        <script src="@routes.Assets.at("javascripts/jquery-1.11.1.min.js")" type="text/javascript"></script>
-        <script src="@routes.Assets.at("bootstrap/js/bootstrap.min.js")" type="text/javascript"></script>
-       	<style type="text/css">
-		.regist {
-		    padding: 10px 15px;
-		    margin-bottom: 20px;
-		    list-style: none;
-		    background-color: whitesmoke;
-		    border-radius: 4px;
-		}
-		</style>
-		<title>図書館アプリ</title>
+    @tag.header()
     </head>
     <body>
-	<div class="container">
-		<h3 class="page-header text-primary">図書館アプリ
-		<small style="margin-left:10px">本の貸し借りを支援するサービスです</small>
-		</h3>
-		@msg
-		user:@user.username
-		@helper.form(action = routes.Application.logout()){
-			<button type="submit" class="btn btn-primary">Logout</button>
-		}
-	</div>
+	@tag.title(msg,user)
 	<center>
 	<div class="container">
 		<div class="form-inline regist" role="form">
@@ -41,7 +18,7 @@
 			<input type="submit" value="登録" class="btn btn-primary" id="register">
 		}
 		</div>
-	</div>		
+	</div>	
 	</center>
 	<div class="container">
 	<table class="table table-striped">

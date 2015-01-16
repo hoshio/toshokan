@@ -1,0 +1,13 @@
+@(msg: String, user: User)
+
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<div class="container">
+	<h3 class="page-header text-primary">図書館アプリ
+	<small style="margin-left:10px">本の貸し借りを支援するサービスです</small>
+	</h3>
+	@msg
+	user:@user.username
+	@helper.form(action = routes.Application.logout()){
+		<button type="submit" class="btn btn-primary">Logout</button>
+	}
+</div>

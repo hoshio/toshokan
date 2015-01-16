@@ -1,12 +1,13 @@
-@(rooms: List[Room], form1: Form[Room])
+@(msg: String, user: User,rooms: List[Room], form1: Form[Room])
+
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 
 <html>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-<title>部屋一覧</title>
-<link rel="stylesheet" media="screen" href="@routes.Assets.at("bootstrap/css/bootstrap.css")" >
-</head>
+    <head>
+    @tag.header()
+    </head>
 <body>
+	@tag.title(msg,user)
 	<center>
 	<div class="container">
 		<div class="form-inline regist" role="form">

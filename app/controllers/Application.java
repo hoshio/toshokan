@@ -112,7 +112,7 @@ public class Application extends Controller {
 		// メール送信
 		User owner = book.owner;
 		Mailer mailer = new Mailer(owner.email, borrower.username, book.book_name);
-		mailer.start();
+		//mailer.start();
 		return redirect(routes.Application.init(book.room.id, "メールを送信しました"));
 		//return init(book.room.id, null);
 	}

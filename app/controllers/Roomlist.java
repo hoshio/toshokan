@@ -18,7 +18,8 @@ public class Roomlist extends Controller {
 	 */
 	@Security.Authenticated(Secured.class)
 	public static Result init() {
-		return ok(room.render(Room.findAll(), new Form<Room>(Room.class)));
+		String msg=new String();
+		return ok(room.render( msg, Secured.getUserInfo(), Room.findAll(), new Form<Room>(Room.class)));
 	}
 	
 	/**
