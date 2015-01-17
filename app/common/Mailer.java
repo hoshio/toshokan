@@ -30,7 +30,7 @@ public class Mailer extends Thread {
     	    mailer.setAuthentication("toshokanapp@gmail.com", "toshoapp");
     	    mailer.setFrom("toshokanapp@gmail.com");
     	    mailer.setMsg(borrower + "があなたの" + bookName + "を貸してほしいそうです。");
-    	    mailer.setSubject("テストメール");
+    	    mailer.setSubject("図書館アプリ Rental希望");
     	    mailer.addTo(ownerEmail);
     	    mailer.send();
     	} catch(EmailException e) {
