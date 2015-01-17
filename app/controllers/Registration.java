@@ -53,10 +53,7 @@ public class Registration extends Controller {
     		
 			Secured.setUserInfo(User.find(username));
     		
-    	    Form<Book> f = new Form<Book>(Book.class);
-    	    //本一覧取得
-    	    List<Book> books = Book.findAll();        
-			return ok(index.render("登録ありがとうございます", Secured.getUserInfo(), f, books));
+    		return redirect(routes.Roomlist.init());
     	}
     }
 }
