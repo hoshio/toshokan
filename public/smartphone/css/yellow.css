@@ -1,0 +1,149 @@
+/*Author: W3layouts
+Author URL: http://w3layouts.com
+License: Creative Commons Attribution 3.0 Unported
+License URL: http://creativecommons.org/licenses/by/3.0/
+--*/
+@import url("../css/bootstrap.css");
+@import url("../css/megamenu.css");
+@import url("../css/flexslider.css");
+@import url(http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700,800);
+body{
+	font-family: 'Open Sans', sans-serif;
+	}
+.header {
+	background:rgba(255, 210, 0, 0.7); 
+}
+.difference {
+	background: #E8C51C;
+}
+.difference h3 {
+	color: #262626;
+}
+.difference span {
+	color: #262626;
+}
+.difference p {
+	color: #262626;
+}
+.difference label {
+	background: #262626;
+}
+.head-nav ul li a:hover, .head-nav ul li.active a {
+	color:#262626;
+	background: rgba(255, 210, 0, 0.57);
+}
+.megamenu .dropdown li a {
+	color: #fff;
+	background:rgba(71, 190, 166, 0.54);
+}
+.megamenu .dropdown li a:hover {
+	color:#262626;
+	background:rgba(255, 210, 0, 0.7); 
+}
+.subscribe {
+	background: #6AB39C;
+}
+.progressy1 p {
+	background: #7BBBA7;
+}
+.progressy2 p {
+	background: #7BBBA7;
+}
+.progressy3 p {
+	background: #7BBBA7;
+}
+.gallery1 h6 a {
+	color: #FAD62D;
+}
+.gallery1 h6 a:hover {
+	color: #6AB39C;
+}
+.flex-control-paging li a.flex-active {
+	background:#6AB39C;
+}
+.flex-control-paging li a:hover {
+	background:#6AB39C;
+}
+a.get {
+	background:#6AB39C;
+}
+a.get:hover {
+	background:#E8645A;
+	color:#fff;
+}
+.button form input[type="submit"] {
+	color: #FFFFFF;
+	background:rgba(255, 210, 0, 0.7)
+}
+.gallery1 i{
+	height: 55px;
+	width: 55px;
+	display: inline-block;
+	background: url(../images/img-sprite.png) no-repeat 0px 0px;
+	position: absolute;
+	top: 63%;
+	right: 8%;
+}
+.gallery1 i.device{
+	background-position:-4px -125px;
+}
+.gallery1 i.video{
+	background-position:-63px -126px;
+}
+.gallery1 i.camera{
+	background-position: -123px -127px;
+}
+.gallery1 i.pencil{
+	background-position: -185px -127px;
+}
+.gallery1:hover i.device{
+	background-position:-4px -64px;
+}
+.gallery1:hover i.video{
+	background-position:  -64px -64px;
+}
+.gallery1:hover i.camera{
+	background-position: -123px -64px;
+}
+.gallery1:hover i.pencil{
+	background-position: -187px -64px;
+}
+i.drop{
+	width: 80px;
+    height: 80px;
+    background:url(../images/img-sprite.png)no-repeat -261px -94px;
+    display: inline-block;
+    vertical-align: middle;
+}
+.progress-head  p.percent{
+	background: url(../images/img-sprite.png) no-repeat -57px -255px;
+}
+.progress-head1  p.percent{
+	background: url(../images/img-sprite.png) no-repeat -57px -255px;
+}
+.progress-head2  p.percent{
+	background: url(../images/img-sprite.png) no-repeat -57px -255px;
+}
+.contact-section form input[type="submit"] {
+	background: #FFE52B;
+	color:#262626;
+}
+.contact-section form textarea {
+	border: 1px solid #E8645A;
+}
+.contact-section form input[type="text"] {
+	border: 1px solid #E8645A;
+}
+a.b-home {
+	background:#FFE52B;
+	color:#262626;
+}
+a.b-home:hover {
+	background:#E8645A;
+	color:#fff;
+	text-decoration:none;
+}
+.head-nav ul li a {
+	color: #fff;
+	background:rgba(255, 210, 0, 0.7);
+}

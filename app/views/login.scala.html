@@ -1,20 +1,21 @@
 @(message: String, form: play.data.Form[models.User])
 
 <html>
-<head>@tag.header()
+<head>
+@tag.header()
 </head>
 <body>
 	<div class="container">
 		<h3 class="page-header text-primary">
 			Login
 			<h5>@message</h5>
+	</div>
+	<div class="container">
+		<div class="col-xs-3">
 			@helper.form(action = routes.Authentication.authenticate()){
 			@if(form.hasGlobalErrors){
 			<p class="error">@form.globalError.message</p>
 			}
-	</div>
-	<div class="container">
-		<div class="col-xs-3">
 			<p>
 				<input type="text" name="username" class="form-control"
 					placeholder="Username" value="@form("username").value">
@@ -25,12 +26,12 @@
 			</p>
 			<p>
 				<input type="submit" value="Login" class="btn btn-primary">
+			}
+			</p>
 
 				@helper.form(action = (routes.Registration.regPage())) { <input
 					type="submit" value="Registration Page" class="btn btn-danger">
 				}
-			</p>
-			}
 		</div>
 	</div>
 </body>

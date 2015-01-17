@@ -1,21 +1,36 @@
 @(user: User)
 
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<div class="container">
-<div class="pageHeader">
-	<div class="titlebar">
-		<div class="subjectBar">
-			<h3 class="text-primary">
-				図書館アプリ <small style="margin-left: 10px">本の貸し借りを支援するサービスです</small>
-			</h3>
-		</div>
-		<div class="userBar">
-			user:@user.username 
-			@helper.form(action =
-			routes.Application.logout()){
-			<button type="submit" class="btn btn-primary">Logout</button>
-			}
-		</div>
+<!-- header -->
+	<div class="banner">
+  	    <div class="container">
+			<div class="header">
+				<div class="logo">
+					<a href="@{routes.Roomlist.init()}"><img src="@routes.Assets.at("smartphone/images/logo.png")" alt="" /></a>
+				</div>
+					<div class="head-nav">
+						<span class="menu"> </span>
+							<ul>
+								<li class="active"><a href="@{routes.Roomlist.init()}">HOME</a></li>
+								<li class="active"><a href="@{routes.Application.logout()}">LOGOUT</a></li>
+									<div class="clear"> </div>
+							</ul>
+					</div>
+				<div class="clear"> </div>
+				<!-- script-for-nav -->
+					<script>
+						$( "span.menu" ).click(function() {
+						  $( ".head-nav ul" ).slideToggle(300, function() {
+							// Animation complete.
+						  });
+						});
+					</script>
+				<!-- script-for-nav -->	
+			</div>	
+			<div class="banner-info">
+				<h1>SHARE YOUR <span>BOOKS</span></h1>
+				
+			</div>			
+		</div> 
 	</div>
-	</div>
-</div>
+<!-- header -->

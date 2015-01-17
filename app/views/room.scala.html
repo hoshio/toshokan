@@ -7,37 +7,40 @@
 </head>
 <body>
 	@tag.title(user)
-	<center>
-	<div class="container">
-	@msg
-		<div class="form-inline regist" role="form">
-		<label>新しく部屋を作る</label>
-		@helper.form(action = routes.Roomlist.register) {
-			<input type="text" class="form-control" name="room_name"
-					placeholder="部屋の名前">
-			<input type="submit" value="登録" class="btn btn-primary" id="register">
-		}
+<!-- subscribe -->
+	<div class="subscribe">
+		<div class="container">
+			<h3>REGISTER NEW LIBRARY</h3>
+			@msg
+			<div class="col-md-12 contact">
+				<div class="col-md-3">
+				@helper.form(action = routes.Roomlist.register) {
+						<input type="text" class="text" name="room_name" onfocus="this.value = '';" onblur="if (this.value == '') {this.value = 'TITLE';}">
+						<input class="customSubmit" type="submit" value="REGISTER">
+					}
+				</div>
+					<div class="clear"> </div>
+			</div>
 		</div>
-	</div>		
-	</center>
-	
-	<div class="container">
-	<table class="table table-striped">
-	<tr>
-		<th>部屋の名前</th>
-		<th>作成者</th>
-		<th></th>
-	</tr>
-	@for(room <- rooms) {
-		<tr>
-			<td>@room.room_name</td>
-			<td>@room.create_user.username</td>
-			<td><a href="@{routes.Application.init(room.id, "")}">入室する</a></td>
-		</tr>
-	}
 	</div>
-	</table>
-
-
+<!-- subscribe -->
+	
+	<!-- LIBRARY LIST -->
+		<div class="work">
+			<div class="container">
+					<h2>LIBRARY LIST</h2>
+				<div class="gallery">
+					@for(room <- rooms) {
+					<div class="col-md-3 gallery1">
+						<a href="@{routes.Application.init(room.id, "welcome")}"><img src="@routes.Assets.at("smartphone/images/img1.jpg")" class="img-responsive" alt="" />
+						<h6>@room.room_name by @room.create_user.username</a><i></i>
+					</div>	
+					}						
+						<div class="clear"> </div>
+				</div>
+			</div>
+		</div>
+	<!-- LIBRARY LIST -->
 </body>
+@tag.footer()
 </html>
