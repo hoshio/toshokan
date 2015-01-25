@@ -41,13 +41,10 @@ public class ItemLookup {
 
 	//アクセスキー
 	private static final String AWS_ACCESS_KEY_ID = KeyManager.instance().getAccessKey();
-
 	//シークレットキー
 	private static final String AWS_SECRET_KEY = KeyManager.instance().getSecretKey();
-
 	//エンドポイント指定
 	private static final String ENDPOINT = "ecs.amazonaws.jp";
-
 	//ISBNコード
 	private static String ITEM_ID = null;
 	
@@ -56,10 +53,10 @@ public class ItemLookup {
 	 * ISBNコードの入力チェックを実施しておく事
 	 * @param book
 	 */
-	public static void setBookInf (Book Data){
+	public static Map<String, String> setBookInf (String isbn){
 		
 		//入力情報よりISBNコードを設定
-		ITEM_ID = Data.isbn_code;
+		ITEM_ID = isbn;
 		
 		//変数の宣言
 		String requestUrl = null;
@@ -67,6 +64,7 @@ public class ItemLookup {
 		String author = null;
 		String publisher = null;
 		String imageURL = null;
+		String amazonURL = null;
 		
 		//requests helper のセットアップ
 		SignedRequestsHelper helper;
@@ -75,7 +73,7 @@ public class ItemLookup {
 					(ENDPOINT, AWS_ACCESS_KEY_ID, AWS_SECRET_KEY);
 		} catch (Exception e) {
 			e.printStackTrace();
-			return;
+			return null;
 		}
 
 		//リクエストパラメータをMapに格納
@@ -97,14 +95,16 @@ public class ItemLookup {
 		author = fetchAuthor(requestUrl);
 		publisher = fetchPublisher(requestUrl);
 		imageURL = fetchImage(requestUrl);
+		amazonURL = fetchURL(requestUrl);
 		
-		//取得した値をData変数に格納
-		Data.book_name = title;
-		Data.author = author;
-		Data.publisher = publisher;
-		Data.image = imageURL;
+		Map<String, String> outMap = new HashMap<>();
+		outMap.put("bookName", title);
+		outMap.put("author", author);
+		outMap.put("publisher", publisher);
+		outMap.put("imageUrl", imageURL);
+		outMap.put("amazonURL", amazonURL);
 
-		return;
+		return outMap;
 	}
 	
 	/**
@@ -174,6 +174,23 @@ public class ItemLookup {
 			DocumentBuilder db = dbf.newDocumentBuilder();
 			Document doc = db.parse(requestUrl);
 			Node imageNode = doc.getElementsByTagName("TinyImage").item(0);
+			image = imageNode.getFirstChild().getTextContent();
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+		return image;
+	}
+	
+	/**
+	 * レスポンスXMLよりAmazonリンクURLを取得
+	 */
+	private static String fetchURL(String requestUrl) {
+		String image = null;
+		try {
+			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+			DocumentBuilder db = dbf.newDocumentBuilder();
+			Document doc = db.parse(requestUrl);
+			Node imageNode = doc.getElementsByTagName("DetailPageURL").item(0);
 			image = imageNode.getFirstChild().getTextContent();
 		} catch (Exception e) {
 			throw new RuntimeException(e);

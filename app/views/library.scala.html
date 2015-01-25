@@ -33,10 +33,10 @@ List[Book])
 				@for(book <- books) {
 				<div class="col-md-3">
 					<div class="icon">
-						<a target="_blank" href="#"><img src=@book.image></a>
+						<a target="_blank" href=@book.amazonURL><img src=@book.image></a>
 					</div>
 					<div class="data">
-						<h5><a target="_blank" href="#">@book.book_name</a></h5>
+						<h5><a target="_blank" href=@book.amazonURL>@book.book_name</a></h5>
 						<p>own : @book.owner.username</p>
 						<p>now :
 						@if(book.borrower != null) { @book.borrower.username } else { N/A }

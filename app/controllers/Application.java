@@ -3,9 +3,9 @@ package controllers;
 import java.util.List;
 
 import models.Book;
+import models.BookInfo;
 import models.Room;
 import models.User;
-import play.Logger;
 import play.cache.Cache;
 import play.data.Form;
 import play.mvc.Controller;
@@ -13,6 +13,7 @@ import play.mvc.Result;
 import play.mvc.Security;
 import views.html.index;
 import views.html.library;
+
 import common.Mailer;
 
 public class Application extends Controller {
@@ -44,11 +45,14 @@ public class Application extends Controller {
 		return ok(library.render(Room.findById(room_id), msg, Secured.getUserInfo(), f, books));
 	}
 
-	/*
+	/**
 	 * 本登録機能
+	 * @param room_id
+	 * @return
 	 */
 	@Security.Authenticated(Secured.class)
 	public static Result register(Long room_id) {
+		
 		// requestからフォームインスタンスを取得
 		Form<Book> f = new Form<Book>(Book.class).bindFromRequest();
 
@@ -56,15 +60,27 @@ public class Application extends Controller {
 		if (f.hasErrors()) {
 			return init(room_id, "エラー");
 		}
-
 		// フォームにエラーがない場合、Messageインスタンスを取得
 		Book book = f.get();
-		// ISBNコードより書籍情報を取得する(見つからないとぬるポで落ちる)
+		
+		// ISBNコードをローカル変数に格納
+		String isbn = book.isbn_code;
+		
+		// BookInfoクラスをインスタンス化
+		BookInfo bookInf = new BookInfo();
+		
+		// ISBNコードより書籍情報を取得する
 		try {
-			ItemLookup.setBookInf(book);
+			bookInf.findByCode(isbn);
 		} catch (RuntimeException e) {
 			return init(room_id, "本が見つかりませんでした。");
 		}
+		// Bookクラスに値を設定
+		book.author = bookInf.author;
+		book.book_name = bookInf.bookName;
+		book.publisher = bookInf.publisher;
+		book.image = bookInf.imageUrl;
+		book.amazonURL = bookInf.amazonUrl;
 		book.owner = Secured.getUserInfo();
 		book.borrower = null;
 		book.room = Room.findById(room_id);

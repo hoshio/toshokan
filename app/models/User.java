@@ -11,7 +11,7 @@ import play.data.validation.Constraints;
 import play.db.ebean.Model;
 
 @Entity
-@Table(name = "users")
+@Table(name = "Masamine")
 public class User extends Model implements Serializable{
 
 	private static final long serialVersionUID = 1L;

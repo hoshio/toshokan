@@ -1,6 +1,6 @@
 import static org.fest.assertions.Assertions.assertThat;
-
 import models.Book;
+import models.BookInfo;
 
 import org.junit.Test;
 
@@ -25,10 +25,11 @@ public class ApplicationTest {
 	public void setBookInfTest() {
 		Book book = new Book();
 		book.isbn_code = "9784798133928";
-		ItemLookup.setBookInf(book);
-		assertThat("Play Framework 2徹底入門 JavaではじめるアジャイルWeb開発").isEqualTo(book.book_name);
-		assertThat("掌田 津耶乃").isEqualTo(book.author);
-		assertThat("翔泳社").isEqualTo(book.publisher);
+		BookInfo bookinf = new BookInfo();
+				bookinf.findByCode(book.isbn_code);
+		assertThat("Play Framework 2徹底入門 JavaではじめるアジャイルWeb開発").isEqualTo(bookinf.bookName);
+		assertThat("掌田 津耶乃").isEqualTo(bookinf.author);
+		assertThat("翔泳社").isEqualTo(bookinf.publisher);
 	}
 
 }

@@ -32,7 +32,7 @@ public class Dump extends Controller {
 		Book book = new Book();
 		book.isbn_code = cd;
 		try {
-			ItemLookup.setBookInf(book);
+			ItemLookup.setBookInf(cd);
 		} catch (RuntimeException e) {
 			Logger.debug("ItemLookUp失敗. ISBN-CD: " + cd, e);
 			return;

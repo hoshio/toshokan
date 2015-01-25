@@ -56,8 +56,8 @@
 	</tr>
 	@for(book <- books) {
 		<tr>
-		    <td><img src=@book.image></td> 
-			<td>@book.book_name</td>
+		    <td><a href=@book.amazonURL><img src=@book.image></a></td>
+			<a href=@book.amazonURL>@book.book_name</a>
 			<td>@book.author</td>
 			<td>@book.publisher</td>
 			<td>@book.owner.username</td>

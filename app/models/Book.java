@@ -3,6 +3,7 @@ package models;
 import java.util.List;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
@@ -29,6 +30,9 @@ public class Book extends Model {
 	public String author;
 	
 	public String image;
+	
+	@Column(length=2048)
+	public String amazonURL;
 	
 	@ManyToOne(cascade = CascadeType.ALL)
 	public User owner;
